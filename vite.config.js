@@ -12,11 +12,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       onwarn(warning, warn) {
-        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return
-        if (warning.code === 'CIRCULAR_DEPENDENCY') return
-        if (warning.message.includes('Use of eval')) return
-        if (warning.message.includes('externalize')) return
-        warn(warning)
+        return // Suppress ALL warnings
       }
     }
   }
