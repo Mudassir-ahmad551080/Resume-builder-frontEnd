@@ -20,8 +20,8 @@ import pdfToText from 'react-pdftotext'
 
 const Dashboard = () => {
   const colors = ["#9b5de5", "#fca3cc", "#f6d186", "#b5ead7", "#c7ceea"];
-  const {user,token} = useSelector(state => state.auth);
-  const [loading,setIsLoading] = React.useState(false);
+  const { user, token } = useSelector(state => state.auth);
+  const [loading, setIsLoading] = React.useState(false);
   const [allResumes, setAllResumes] = React.useState([]);
   const [showcreatereume, setShowcreateresume] = React.useState(false);
   const [showuploadresume, setShowuploadresume] = React.useState(false);
@@ -32,52 +32,55 @@ const Dashboard = () => {
   const [theme] = useTheme();
 
   const loadAllResumes = async () => {
-      try {
-        const {data} = await api.get('/api/users/resumes',{
-          headers: {
-            Authorization: token
-          }
-        });
-        setAllResumes(data.resumes);
-      } catch (error) {
-        console.error("Load Error:", error);
-        toast.error("Failed to load resumes");
-      }
+    try {
+      const { data } = await api.get('/api/users/resumes', {
+        headers: {
+          Authorization: token
+        }
+      });
+      setAllResumes(data.resumes);
+    } catch (error) {
+      console.error("Load Error:", error);
+      toast.error("Failed to load resumes");
+    }
   };
 
   const createResume = async (e) => {
-  e.preventDefault();
-  
-  // 1. Validation check
-  if (!token) {
-    toast.error("Session expired. Please login again.");
-    navigate("/login");
-    return;
-  }
+    e.preventDefault();
+    setIsLoading(true);
+    // 1. Validation check
+    if (!token) {
+      toast.error("Session expired. Please login again.");
+      navigate("/login");
+      return;
+    }
 
-  try {
-    const { data } = await api.post(
-      '/api/resumes/create',
-      { title },
-      { 
-        headers: { 
-          // Ensure "Bearer" is spelled correctly and token exists
-          Authorization: token 
-        } 
-      }
-    );
+    try {
+      const { data } = await api.post(
+        '/api/resumes/create',
+        { title },
+        {
+          headers: {
+            // Ensure "Bearer" is spelled correctly and token exists
+            Authorization: token
+          }
+        }
+      );
 
-    setAllResumes([...allResumes, data.resume]);
-    setTitle("");
-    setShowcreateresume(false);
-    toast.success("Resume created!");
-    navigate(`/app/builder/${data.resume._id}`);
-  } catch (error) {
-    // 2. Enhanced error logging
-    console.error("Create Error:", error.response);
-    toast.error(error.response?.data?.message || "Failed to create resume");
+      setAllResumes([...allResumes, data.resume]);
+      setTitle("");
+      setShowcreateresume(false);
+      toast.success("Resume created!");
+      navigate(`/app/builder/${data.resume._id}`);
+    } catch (error) {
+      // 2. Enhanced error logging
+      console.error("Create Error:", error.response);
+      toast.error(error.response?.data?.message || "Failed to create resume");
+    }
+    finally {
+      setIsLoading(false);
+    }
   }
-}
 
   const uploadResume = async (e) => {
     e.preventDefault();
@@ -86,68 +89,68 @@ const Dashboard = () => {
 
     setIsLoading(true);
     try {
-        // 1. Extract text from PDF
-        const resumeText = await pdfToText(resume);
-        
-        // DEBUG: Check if text was actually extracted
-        console.log("Extracted Text:", resumeText);
+      // 1. Extract text from PDF
+      const resumeText = await pdfToText(resume);
 
-        if (!resumeText || resumeText.trim().length === 0) {
-            throw new Error("Could not extract text from this PDF. It might be an image-based PDF.");
+      // DEBUG: Check if text was actually extracted
+      console.log("Extracted Text:", resumeText);
+
+      if (!resumeText || resumeText.trim().length === 0) {
+        throw new Error("Could not extract text from this PDF. It might be an image-based PDF.");
+      }
+
+      const { data } = await api.post(
+        '/api/ai/upload-resume',
+        { title, resumeText }, // Sending both fields
+        {
+          headers: {
+            Authorization: token // Ensure your Interceptor or this header is correct
+          }
         }
+      );
 
-        const { data } = await api.post(
-            '/api/ai/upload-resume',
-            { title, resumeText }, // Sending both fields
-            { 
-                headers: { 
-                    Authorization: token // Ensure your Interceptor or this header is correct
-                } 
-            }
-        );
-
-        toast.success("Resume parsed successfully!");
-        setTitle("");
-        setResume(null);
-        setShowuploadresume(false);
-        navigate(`/app/builder/${data.resumeId}`);
+      toast.success("Resume parsed successfully!");
+      setTitle("");
+      setResume(null);
+      setShowuploadresume(false);
+      navigate(`/app/builder/${data.resumeId}`);
     } catch (error) {
-        console.error("Upload Error:", error);
-        toast.error(error.message || "Failed to upload resume");
+      console.error("Upload Error:", error);
+      toast.error(error.message || "Failed to upload resume");
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
 
   const editTitle = async (e) => {
-  e.preventDefault();
-  try {
-    const { data } = await api.put(
-      `/api/resumes/update`, // Or `/api/resumes/update/${editresumeId}`
-      { 
-        resumeId: editresumeId, 
-        title: title // Flat structure is often preferred
-      },
-      {
-        headers: {
-          // Add "Bearer " if your backend requires it
-          Authorization: token 
+    e.preventDefault();
+    try {
+      const { data } = await api.put(
+        `/api/resumes/update`, // Or `/api/resumes/update/${editresumeId}`
+        {
+          resumeId: editresumeId,
+          title: title // Flat structure is often preferred
+        },
+        {
+          headers: {
+            // Add "Bearer " if your backend requires it
+            Authorization: token
+          }
         }
-      }
-    );
+      );
 
-    setAllResumes(allResumes.map(resume => 
-      resume._id === editresumeId ? { ...resume, title } : resume
-    ));
-    
-    setEditresumeId("");
-    setTitle("");
-    toast.success("Resume title updated");
-  } catch (error) {
-    console.error("Edit Error:", error);
-    toast.error(error.response?.data?.message || "Failed to update resume title");
-  }
-};
+      setAllResumes(allResumes.map(resume =>
+        resume._id === editresumeId ? { ...resume, title } : resume
+      ));
+
+      setEditresumeId("");
+      setTitle("");
+      toast.success("Resume title updated");
+    } catch (error) {
+      console.error("Edit Error:", error);
+      toast.error(error.response?.data?.message || "Failed to update resume title");
+    }
+  };
   const deleteResume = async (resumeId) => {
     // 1. Confirm before deleting
     if (!window.confirm("Are you sure you want to delete this resume?")) {
@@ -167,7 +170,7 @@ const Dashboard = () => {
 
       // 4. Success Toast
       toast.success("Resume deleted successfully");
-      
+
     } catch (error) {
       console.error("Delete Error:", error);
       // 5. Error Toast
@@ -194,19 +197,19 @@ const Dashboard = () => {
       <div id={theme} className="flex flex-col sm:flex-row gap-6 w-full max-w-2xl mx-auto justify-center">
         {/* Create Resume */}
         <button
-  id={theme}
-  onClick={() => setShowcreateresume(true)}
-  className="flex flex-col items-center justify-center gap-3 
+          id={theme}
+          onClick={() => setShowcreateresume(true)}
+          className="flex flex-col items-center justify-center gap-3 
   bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500 
   text-white px-6 py-20 rounded-2xl shadow-lg transition-all duration-300 
   hover:scale-105 hover:shadow-2xl hover:from-gray-400 hover:via-gray-500 hover:to-gray-600
   focus:outline-none focus:ring-4 focus:ring-gray-400 w-full sm:w-1/2"
->
-  <PlusIcon className="w-10 h-10 p-2 bg-gray-700 rounded-full backdrop-blur-sm text-white" />
-  <span className="text-lg text-black font-semibold">
-    Create Resume
-  </span>
-</button>
+        >
+          <PlusIcon className="w-10 h-10 p-2 bg-gray-700 rounded-full backdrop-blur-sm text-white" />
+          <span className="text-lg text-black font-semibold">
+            Create Resume
+          </span>
+        </button>
 
 
         {/* Upload Resume */}
@@ -295,13 +298,13 @@ const Dashboard = () => {
 
       {
         showcreatereume && (
-          <div 
-             
+          <div
+
             onClick={() => setShowcreateresume(false)}
             className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
           >
             <form
-             id={theme}
+              id={theme}
               onSubmit={createResume}
               onClick={(e) => e.stopPropagation()}
               className="relative bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-md flex flex-col gap-5 border border-gray-200 transition-all duration-300 scale-100 hover:scale-[1.01]"
@@ -341,7 +344,7 @@ const Dashboard = () => {
               {/* Buttons */}
               <div id={theme} className="flex justify-end gap-3 mt-4">
                 <button
-                 id={theme}
+                  id={theme}
                   type="button"
                   onClick={() => {
                     setShowcreateresume(false);
@@ -352,11 +355,18 @@ const Dashboard = () => {
                   Cancel
                 </button>
                 <button
-                 
                   type="submit"
-                  className="px-5 py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 shadow-md transition-all"
+                  disabled={loading}
+                  className="px-5 flex gap-1 items-center py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 shadow-md transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Create
+                  {loading ? (
+                    <>
+                      <LoaderCircleIcon className="animate-spin w-4 h-4" />
+                      Creating...
+                    </>
+                  ) : (
+                    "Create"
+                  )}
                 </button>
               </div>
             </form>
@@ -371,14 +381,14 @@ const Dashboard = () => {
             className="fixed inset-0  bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
           >
             <form
-             id={theme}
+              id={theme}
               onSubmit={uploadResume}
               onClick={(e) => e.stopPropagation()}
               className="relative bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-md flex flex-col gap-5 border border-gray-200 transition-all duration-300 scale-100 hover:scale-[1.01]"
             >
               {/* Close Icon */}
               <button
-               id={theme}
+                id={theme}
                 type="button"
                 onClick={() => {
                   setShowuploadresume(false);
@@ -399,7 +409,7 @@ const Dashboard = () => {
 
               {/* Input Field */}
               <input
-               id={theme}
+                id={theme}
                 type="text"
                 placeholder="Enter resume title"
                 value={title}
@@ -410,7 +420,7 @@ const Dashboard = () => {
 
               <div id={theme}>
                 <label id={theme} htmlFor="resume-input">Select Resume File</label>
-                <input  type="file" accept=".pdf" hidden id="resume-input" onChange={(e) => setResume(e.target.files[0])} />
+                <input type="file" accept=".pdf" hidden id="resume-input" onChange={(e) => setResume(e.target.files[0])} />
                 <div id={theme} className="mt-2 flex items-center gap-3">
                   <div
                     id={theme}
@@ -440,8 +450,8 @@ const Dashboard = () => {
               {/* Buttons */}
               <div className="flex justify-end gap-3 mt-4">
 
-               {loading ? (<button type="button" className="px-5 flex gap-1 py-2 rounded-lg bg-blue-600 text-white font-medium shadow-md transition-all">
-                   <LoaderCircleIcon className="animate-spin"/>
+                {loading ? (<button type="button" className="px-5 flex gap-1 py-2 rounded-lg bg-blue-600 text-white font-medium shadow-md transition-all">
+                  <LoaderCircleIcon className="animate-spin" />
                   Uploading...
                 </button>) : (
                   <button
