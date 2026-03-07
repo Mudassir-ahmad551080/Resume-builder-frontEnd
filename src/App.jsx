@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import api from './config/api.js'
 import { login,setLoading } from './app/features/authSlice.js'
+import InterviewAgent from './components/InterviewAgent.jsx'
 // import ResumeAnalyzer from './components/ResumeAnalyzer.jsx'
 const App = () => {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ const App = () => {
         </Route>
         <Route path='view/:resumeId' element={<Preview/>}/>
         <Route path='/analyze-resume' element={<ResumeAnalyzer/>}/>
+        <Route path='/interview-agent' element={<InterviewAgent/>}/>
      </Routes>
     </>
   )

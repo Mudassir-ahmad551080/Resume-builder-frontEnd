@@ -10,6 +10,7 @@ import {
   UploadCloud,
   UploadCloudIcon,
   XIcon,
+  Mic
 } from "lucide-react";
 
 import { useTheme } from "../context/ThemContext.jsx";
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const [allResumes, setAllResumes] = React.useState([]);
   const [showcreatereume, setShowcreateresume] = React.useState(false);
   const [showuploadresume, setShowuploadresume] = React.useState(false);
+  const [fetchingResumes, setFetchingResumes] = React.useState(true);
   const [title, setTitle] = React.useState("");
   const [resume, setResume] = React.useState(null);
   const [editresumeId, setEditresumeId] = React.useState("");
@@ -32,6 +34,7 @@ const Dashboard = () => {
   const [theme] = useTheme();
 
   const loadAllResumes = async () => {
+    setFetchingResumes(true);
     try {
       const { data } = await api.get('/api/users/resumes', {
         headers: {
@@ -42,6 +45,9 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Load Error:", error);
       toast.error("Failed to load resumes");
+    }
+    finally {
+      setFetchingResumes(false);
     }
   };
 
@@ -179,7 +185,7 @@ const Dashboard = () => {
   };
   useEffect(() => {
     loadAllResumes();
-  },);
+  },[]);
 
   return (
     <div id={theme} className="min-h-screen bg-gray-50 flex flex-col px-6 sm:px-10 py-6">
@@ -194,7 +200,7 @@ const Dashboard = () => {
       </div>
 
       {/* Action Buttons */}
-      <div id={theme} className="flex flex-col sm:flex-row gap-6 w-full max-w-2xl mx-auto justify-center">
+      <div id={theme} className="flex flex-col sm:flex-row gap-5 w-full max-w-4xl mx-auto justify-center">
         {/* Create Resume */}
         <button
           id={theme}
@@ -227,6 +233,15 @@ const Dashboard = () => {
           </span>
         </button>
 
+        <Link to="/interview-agent" className="flex flex-col items-center justify-center gap-3 
+  bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500 
+  text-white px-6 py-20 rounded-2xl shadow-lg transition-all duration-300 
+  hover:scale-105 hover:shadow-2xl hover:from-gray-400 hover:via-gray-500 hover:to-gray-500
+  focus:outline-none focus:ring-4 focus:ring-gray-300 w-full sm:w-1/2">
+          <Mic className="w-10 h-10 text-black" />
+          <span className="text-lg text-black font-semibold">Interview Agent</span>
+        </Link>
+
       </div>
 
       {/* Divider */}
@@ -234,66 +249,70 @@ const Dashboard = () => {
 
       {/* Resume Cards */}
       <div id={theme} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
-        {allResumes.map((resume, index) => {
-          const baseColor = colors[index % colors.length];
-          return (
-            <div
-              id={theme}
-              onClick={() => navigate(`/app/builder/${resume._id}`)}
-              key={index}
-              className="relative group p-6 rounded-xl shadow-md bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-              style={{
-                borderTop: `4px solid ${baseColor}`,
-              }}
-            >
-              {/* Icon */}
-              <div
-                id={theme} className="w-12 h-12 flex items-center justify-center rounded-full mb-4"
-                style={{ backgroundColor: baseColor + "33" }}
-              >
-                <FilePenLineIcon
-                  id={theme}
-                  className="w-6 h-6"
-                  style={{ color: baseColor }}
-                />
-              </div>
+  {fetchingResumes ? (
+    <div className="col-span-full flex justify-center items-center py-20">
+      <LoaderCircleIcon className="animate-spin w-10 h-10 text-blue-500" />
+    </div>
+  ) : allResumes.length === 0 ? (
+    <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-400">
+      <FilePenLineIcon className="w-12 h-12 mb-3 text-gray-300" />
+      <p className="text-lg font-medium">No resumes yet</p>
+      <p className="text-sm">Create or upload one above to get started!</p>
+    </div>
+  ) : (
+    allResumes.map((resume, index) => {
+      const baseColor = colors[index % colors.length];
+      return (
+        <div
+          id={theme}
+          onClick={() => navigate(`/app/builder/${resume._id}`)}
+          key={index}
+          className="relative group p-6 rounded-xl shadow-md bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+          style={{ borderTop: `4px solid ${baseColor}` }}
+        >
+          {/* Icon */}
+          <div
+            id={theme}
+            className="w-12 h-12 flex items-center justify-center rounded-full mb-4"
+            style={{ backgroundColor: baseColor + "33" }}
+          >
+            <FilePenLineIcon id={theme} className="w-6 h-6" style={{ color: baseColor }} />
+          </div>
 
-              {/* Title */}
-              <p id={theme} className="font-semibold text-gray-800 text-lg truncate">
-                {resume.title}
-              </p>
+          {/* Title */}
+          <p id={theme} className="font-semibold text-gray-800 text-lg truncate">
+            {resume.title}
+          </p>
 
-              {/* Date */}
-              <p id={theme} className="text-gray-500 text-sm mt-1">
-                Updated on{" "}
-                {new Date(resume.updateAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
+          {/* Date */}
+          <p id={theme} className="text-gray-500 text-sm mt-1">
+            Updated on{" "}
+            {new Date(resume.updateAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
 
-              {/* Hover Actions */}
-              <div
-                onClick={e => e.stopPropagation()}
-                className="absolute top-4 right-4 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              >
-                <button
-                  className="p-2 bg-gray-100 rounded-full hover:bg-red-100 transition-colors"
-                  title="Delete"
-                >
-                  <TrashIcon onClick={() => deleteResume(resume._id)} className="w-4 h-4 text-red-500" />
-                </button>
-                <button
-                  className="p-2 bg-gray-100 rounded-full hover:bg-blue-100 transition-colors"
-                  title="Edit"
-                >
-                  <PencilIcon onClick={() => { setEditresumeId(resume._id); setTitle(resume.title) }} className="w-4 h-4 text-blue-500" />
-                </button>
-              </div>
-            </div>
-          );
-        })}
+          {/* Hover Actions */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="absolute top-4 right-4 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            <button className="p-2 bg-gray-100 rounded-full hover:bg-red-100 transition-colors" title="Delete">
+              <TrashIcon onClick={() => deleteResume(resume._id)} className="w-4 h-4 text-red-500" />
+            </button>
+            <button className="p-2 bg-gray-100 rounded-full hover:bg-blue-100 transition-colors" title="Edit">
+              <PencilIcon
+                onClick={() => { setEditresumeId(resume._id); setTitle(resume.title); }}
+                className="w-4 h-4 text-blue-500"
+              />
+            </button>
+          </div>
+        </div>
+      );
+    })
+  )}
       </div>
 
       {
