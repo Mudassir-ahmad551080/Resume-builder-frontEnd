@@ -4,6 +4,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',  // ← added
+        changeOrigin: true,
+      }
+    }
+  },
+
   optimizeDeps: {
     include: ['pdfjs-dist']
   },
@@ -12,7 +22,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       onwarn(warning, warn) {
-        return // Suppress ALL warnings
+        return
       }
     }
   }
