@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import pdfToText from "react-pdftotext";
+import api from "../config/api";
 
 
 // ── Utility: Extract text from TXT or PDF file ──────────────────────────────
@@ -121,7 +121,7 @@ const handleStartInterview = async () => {
 
       setResumeText(text);
 
-      const res = await axios.post("/api/ai/interview-prep", { resumeText: text });
+      const res = await api.post("/api/ai/interview-prep", { resumeText: text });
       const { question, questionContext: ctx, questionNumber: qNum } = res.data;
 
       setQuestionContext(ctx);
@@ -152,7 +152,7 @@ const handleStartInterview = async () => {
     try {
       const apiMessages = updatedMessages.map(({ role, content }) => ({ role, content }));
 
-      const res = await axios.post("/api/ai/interview-respond", {
+      const res = await api.post("/api/ai/interview-respond", {
         resumeText,
         messages: apiMessages,
         questionNumber,
