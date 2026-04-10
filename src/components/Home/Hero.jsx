@@ -6,6 +6,7 @@ import { IoSunnyOutline } from "react-icons/io5";
 import logo from '../../../public/logo.svg';
 import { ReactTyped } from "react-typed";
 import { useSelector } from 'react-redux';
+
 const Hero = () => {
     // State for the mobile menu visibility
     const [menuOpen, setMenuOpen] = useState(false);
@@ -19,20 +20,11 @@ const Hero = () => {
     // ⭐ New Effect Hook to handle the scroll event ⭐
     useEffect(() => {
         const handleScroll = () => {
-            // Check if scrolling UP (current scroll < last scroll)
-            // The check window.scrollY > 50 prevents the navbar from snapping 
-            // to 'hidden' immediately when the page loads or at the very top.
             if (window.scrollY < lastScrollY && window.scrollY > 50) {
-                // Scrolling up: show the navbar (sticky)
                 setShowNavbar(true);
-            }
-            // Check if scrolling DOWN (current scroll > last scroll)
-            else if (window.scrollY > lastScrollY) {
-                // Scrolling down: hide the navbar (let it scroll out of view)
+            } else if (window.scrollY > lastScrollY) {
                 setShowNavbar(false);
-            }
-            // If at the very top (or near it), always show the navbar
-            else if (window.scrollY <= 50) {
+            } else if (window.scrollY <= 50) {
                 setShowNavbar(true);
             }
 
@@ -40,27 +32,24 @@ const Hero = () => {
             setLastScrollY(window.scrollY);
         };
 
-        // Attach the event listener when the component mounts
         window.addEventListener('scroll', handleScroll);
-
-        // Clean up the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]); // Dependency array ensures we use the latest lastScrollY value
 
-    //light theme and dark theme functionality is yet to be added
+    // Prefetch the Layout chunk to speed up navigation to /app
+    const prefetchLayout = () => {
+        import('../../pages/Layout.jsx');
+    }
+
     const [theme, setTheme] = useTheme();
     let clutter = 0;
 
     function handleChange() {
         if (clutter == 0) {
             setTheme((preve) => (preve === 'ligth' ? 'dark' : 'ligth'));
-            // clutter=1;
         }
         else {
             setTheme(<img src={face} />);
-            // clutter=0;
         }
     }
 
@@ -68,7 +57,6 @@ const Hero = () => {
         'https://i.pinimg.com/736x/9e/ab/c5/9eabc54fbe3cd7a6931695dcce52cc82.jpg',
         'https://i.pinimg.com/736x/fa/76/9b/fa769ba2fd25c9bdd269a736e0942218.jpg',
         'https://i.pinimg.com/736x/89/6c/5b/896c5bae8a9ef75618c6f6969a4248cd.jpg',
-        'https://i.pinimg.com/736x/a0/b2/b7/a0b2b766778a7a2357019d2e9a5fd4a5.jpg',
         'https://i.pinimg.com/1200x/f4/22/30/f42230e621c19fea5815dde7a09ed83c.jpg',
     ];
 
@@ -102,16 +90,16 @@ const Hero = () => {
                     <div id={theme} className="flex gap-2">
                         {user ? (
                             // ✅ If logged in, show Dashboard button
-                            <Link to='/app?state=register' className="hidden md:block px-6 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
+                            <Link to='/app?state=register' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="hidden md:block px-6 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
                                 Dashboard
-                                </Link>
+                            </Link>
                         ) : (
                             // ✅ If not logged in, show Get Started + Login buttons
                             <>
-                                <Link to='/app?state=register' className="hidden md:block px-6 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
+                                <Link to='/app?state=register' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="hidden md:block px-6 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
                                     Get started
                                 </Link>
-                                <Link id={theme} to='/app?state=login' className="hidden md:block px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900">
+                                <Link id={theme} to='/app?state=login' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="hidden md:block px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900">
                                     Login
                                 </Link>
                             </>
@@ -124,16 +112,15 @@ const Hero = () => {
 
                      {
                         user ? (
-                            <Link to='/app?state=register' className="md:hidden px-3 py-1 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
+                            <Link to='/app?state=register' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="md:hidden px-3 py-1 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
                                 Dashboard
                             </Link>
                         ):(
-                            <Link id={theme} to='/app?state=login' className=" md:hidden px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900">
+                            <Link id={theme} to='/app?state=login' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className=" md:hidden px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900">
                                     Login
-                      </Link>
+                            </Link>
                         )
                      }
-                    
 
                     <button onClick={() => setMenuOpen(true)} className="md:hidden active:scale-90 transition" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" className="lucide lucide-menu" >
@@ -157,7 +144,6 @@ const Hero = () => {
                     <button onClick={() => setMenuOpen(false)} className="active:ring-3 active:ring-white aspect-square size-10 p-1 items-center justify-center bg-green-600 hover:bg-green-700 transition text-white rounded-md flex" >
                         X
                     </button>
-                    
                 </div>
 
                 {/* Hero Section */}
@@ -207,7 +193,7 @@ const Hero = () => {
 
                     {/* CTA Buttons */}
                     <div className="flex items-center  gap-4 ">
-                        <Link to='/app' className="bg-green-500 hover:bg-green-600 text-white rounded-full md:px-9 md:h-12 px-4 h-9 m-1 ring-offset-2 ring-1 ring-green-400 flex items-center transition-colors">
+                        <Link to='/app' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="bg-green-500 hover:bg-green-600 text-white rounded-full md:px-9 md:h-12 px-4 h-9 m-1 ring-offset-2 ring-1 ring-green-400 flex items-center transition-colors">
                             Create Resume
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right ml-1 size-4" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                         </Link>
