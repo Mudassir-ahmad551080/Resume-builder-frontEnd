@@ -1,7 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import pdfToText from "react-pdftotext";
 import api from "../config/api";
-
+import { useTheme } from "../context/ThemContext.jsx";
+import {
+  Target,
+  UploadCloud,
+  Mic,
+  BarChart3,
+  Zap,
+  SkipForward,
+  Send,
+  RotateCcw,
+  CheckCircle2,
+  AlertCircle,
+  Lightbulb,
+  Sparkles,
+  ArrowLeft,
+  MessageSquare,
+  User,
+  Bot
+} from "lucide-react";
 
 // ── Utility: Extract text from TXT or PDF file ──────────────────────────────
 const extractTextFromFile = (file) => {
@@ -13,7 +32,7 @@ const extractTextFromFile = (file) => {
         reader.onerror = reject;
         reader.readAsText(file);
       } else if (file.type === "application/pdf") {
-        const text = await pdfToText(file); // ← handles PDF internally
+        const text = await pdfToText(file);
         resolve(text);
       } else {
         reject(new Error("Unsupported file type"));
@@ -25,47 +44,58 @@ const extractTextFromFile = (file) => {
 };
 
 // ── Score Ring Component ─────────────────────────────────────────────────────
-const ScoreRing = ({ score }) => {
+const ScoreRing = ({ score, isDark }) => {
   const radius = 52;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
   const color = score >= 75 ? "#4ade80" : score >= 50 ? "#facc15" : "#f87171";
 
   return (
-    <svg width="130" height="130" style={{ transform: "rotate(-90deg)" }}>
-      <circle cx="65" cy="65" r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10" />
-      <circle
-        cx="65" cy="65" r={radius} fill="none"
-        stroke={color} strokeWidth="10"
-        strokeDasharray={circumference}
-        strokeDashoffset={offset}
-        strokeLinecap="round"
-        style={{ transition: "stroke-dashoffset 1.2s ease", filter: `drop-shadow(0 0 8px ${color}88)` }}
-      />
-      <text x="65" y="72" textAnchor="middle"
-        style={{ fill: color, fontSize: "22px", fontWeight: 700, fontFamily: "'Sora', sans-serif", transform: "rotate(90deg)", transformOrigin: "65px 65px" }}>
-        {score}
-      </text>
-    </svg>
+    <div className="relative w-32 h-32">
+      <svg width="130" height="130" className="transform -rotate-90">
+        <circle
+          cx="65" cy="65" r={radius}
+          fill="none"
+          stroke={isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}
+          strokeWidth="10"
+        />
+        <circle
+          cx="65" cy="65" r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth="10"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-1000 ease-out"
+          style={{ filter: `drop-shadow(0 0 8px ${color}88)` }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-3xl font-bold" style={{ color }}>
+          {score}
+        </span>
+      </div>
+    </div>
   );
 };
 
 // ── Main Component ───────────────────────────────────────────────────────────
 const InterviewAgent = () => {
-  const [phase, setPhase] = useState("upload"); // upload | interviewing | results
+  const [theme] = useTheme();
+  const isDark = theme === "dark";
+
+  const [phase, setPhase] = useState("upload");
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeText, setResumeText] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Interview state
   const [messages, setMessages] = useState([]);
   const [questionContext, setQuestionContext] = useState("");
   const [questionNumber, setQuestionNumber] = useState(0);
   const [userInput, setUserInput] = useState("");
-
-  // Results state
   const [result, setResult] = useState(null);
 
   const chatBottomRef = useRef(null);
@@ -103,14 +133,12 @@ const InterviewAgent = () => {
   };
 
   // ── Start Interview ────────────────────────────────────────────────────────
- // ── Start Interview ────────────────────────────────────────────────────────
-const handleStartInterview = async () => {
+  const handleStartInterview = async () => {
     if (!resumeFile) return;
     setLoading(true);
     setError("");
 
     try {
-      // ✅ Both PDF and TXT now parsed on frontend — no backend call needed
       const text = await extractTextFromFile(resumeFile);
 
       if (!text || text.trim() === "") {
@@ -131,13 +159,12 @@ const handleStartInterview = async () => {
 
     } catch (err) {
       console.error("Full error:", err);
-      console.error("Response data:", err.response?.data);
       const msg = err.response?.data?.message || err.message || "Failed to start interview.";
       setError(msg);
     } finally {
       setLoading(false);
     }
-};
+  };
 
   // ── Send Answer ────────────────────────────────────────────────────────────
   const handleSendAnswer = async (answer) => {
@@ -193,69 +220,44 @@ const handleStartInterview = async () => {
     setError("");
   };
 
-  const BASE_STYLES = {
-    page: {
-      minHeight: "100vh",
-      background: "#080c14",
-      backgroundImage: `
-        radial-gradient(ellipse 60% 40% at 15% 60%, rgba(56,189,248,0.05) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 50% at 85% 20%, rgba(99,102,241,0.05) 0%, transparent 70%)
-      `,
-      fontFamily: "'Sora', sans-serif",
-      color: "#e2eaf8",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "0 1rem",
-    },
-    navBrand: { display: "flex", alignItems: "center", gap: 10 },
-    navDot: {
-      width: 32, height: 32, borderRadius: "50%",
-      background: "linear-gradient(135deg, #38bdf8, #6366f1)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: "0.85rem", boxShadow: "0 0 18px rgba(56,189,248,0.35)",
-    },
-  };
-
-  const GLOBAL_CSS = `
-    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-    * { box-sizing: border-box; margin:0; padding:0; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-    @keyframes spin { to{transform:rotate(360deg)} }
-    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-    textarea:focus, input:focus { outline:none; }
-    ::-webkit-scrollbar { width:4px; }
-    ::-webkit-scrollbar-thumb { background:rgba(56,189,248,0.2); border-radius:4px; }
-  `;
-
   // ── UPLOAD PHASE ───────────────────────────────────────────────────────────
   if (phase === "upload") {
     return (
-      <div style={BASE_STYLES.page}>
-        <style>{GLOBAL_CSS}</style>
-
-        {/* Nav */}
-        <div style={{ width: "100%", maxWidth: 800, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.5rem 0", borderBottom: "1px solid rgba(255,255,255,0.05)", marginBottom: "1rem" }}>
-          <div style={BASE_STYLES.navBrand}>
-            <div style={BASE_STYLES.navDot}>🎯</div>
-            <div>
-              <div style={{ fontSize: "1rem", fontWeight: 700, letterSpacing: "0.04em" }}>Interview Agent</div>
-              <div style={{ fontSize: "0.72rem", color: "#4b6280", marginTop: 1 }}>AI-Powered Mock Interviewer</div>
+      <div className={`min-h-screen ${isDark ? "bg-slate-950" : "bg-slate-50"} ${isDark ? "bg-[radial-gradient(ellipse_60%_40%_at_15%_60%,rgba(56,189,248,0.05)_0%,transparent_70%),radial-gradient(ellipse_50%_50%_at_85%_20%,rgba(99,102,241,0.05)_0%,transparent_70%)]" : ""}`}>
+        <div className="max-w-2xl mx-auto px-4">
+          {/* Nav */}
+          <div className={`flex items-center justify-between py-6 border-b ${isDark ? "border-slate-800/50" : "border-slate-200"}`}>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center ${isDark ? "shadow-lg shadow-sky-500/30" : "shadow-lg shadow-sky-200"}`}>
+                <Target className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <div className={`font-bold ${isDark ? "text-white" : "text-slate-900"}`}>Interview Agent</div>
+                <div className={`text-xs ${isDark ? "text-slate-500" : "text-slate-400"}`}>AI-Powered Mock Interviewer</div>
+              </div>
             </div>
+            <Link
+              to="/app"
+              className={`flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-700"}`}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Link>
           </div>
-          <div style={{ fontSize: "0.75rem", color: "#4b6280", background: "rgba(56,189,248,0.06)", border: "1px solid rgba(56,189,248,0.15)", padding: "5px 12px", borderRadius: 20 }}>
+
+          {/* Badge */}
+          <div className={`inline-flex items-center gap-2 rounded-full px-4 py-2 mt-6 mb-4 text-xs font-bold tracking-wider uppercase ${isDark ? "bg-sky-500/10 border border-sky-500/30 text-sky-400" : "bg-sky-50 border border-sky-200 text-sky-600"}`}>
+            <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
             7 Questions · Scored
           </div>
-        </div>
 
-        <div style={{ width: "100%", maxWidth: 520, animation: "fadeUp 0.5s ease" }}>
           {/* Hero */}
-          <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-            <h1 style={{ fontSize: "clamp(1.8rem, 5vw, 2.6rem)", fontWeight: 700, lineHeight: 1.25, marginBottom: "0.9rem", background: "linear-gradient(135deg, #e2eaf8 30%, #38bdf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              Ace Your Next<br />Interview
+          <div className="text-center mb-8">
+            <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${isDark ? "text-white" : "text-slate-900"}`}>
+              Ace Your Next
+              <span className="bg-gradient-to-r from-sky-400 to-indigo-500 bg-clip-text text-transparent"> Interview</span>
             </h1>
-            <p style={{ color: "#4b6280", fontSize: "0.92rem", lineHeight: 1.75, maxWidth: 380, margin: "0 auto" }}>
+            <p className={`text-base max-w-md mx-auto ${isDark ? "text-slate-400" : "text-slate-600"}`}>
               Upload your resume. Our AI reads it, runs a live personalized mock interview — then scores you and tells you exactly how to improve.
             </p>
           </div>
@@ -266,42 +268,66 @@ const handleStartInterview = async () => {
             onDragLeave={() => setDragOver(false)}
             onDrop={handleFileDrop}
             onClick={() => fileInputRef.current?.click()}
-            style={{
-              border: dragOver ? "2px solid #38bdf8" : resumeFile ? "2px solid rgba(56,189,248,0.45)" : "2px dashed rgba(255,255,255,0.09)",
-              borderRadius: 18, padding: "2.8rem 2rem", textAlign: "center", cursor: "pointer",
-              transition: "all 0.25s",
-              background: dragOver ? "rgba(56,189,248,0.06)" : resumeFile ? "rgba(56,189,248,0.04)" : "rgba(255,255,255,0.02)",
-              marginBottom: "1.2rem",
-            }}
+            className={`
+              border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-200 mb-5
+              ${dragOver
+                ? "border-sky-400 bg-sky-500/10"
+                : resumeFile
+                  ? "border-sky-400/50 bg-sky-500/5"
+                  : isDark
+                    ? "border-slate-700 hover:border-slate-600 bg-slate-900/50"
+                    : "border-slate-300 hover:border-slate-400 bg-slate-100"
+              }
+            `}
           >
-            <input ref={fileInputRef} type="file" accept=".pdf,.txt" style={{ display: "none" }}
-              onChange={(e) => validateAndSetFile(e.target.files[0])} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.txt"
+              className="hidden"
+              onChange={(e) => validateAndSetFile(e.target.files[0])}
+            />
+
             {resumeFile ? (
               <>
-                <div style={{ fontSize: "2.2rem", marginBottom: "0.7rem" }}>📄</div>
-                <div style={{ color: "#38bdf8", fontWeight: 600, marginBottom: "0.3rem", fontSize: "0.95rem" }}>{resumeFile.name}</div>
-                <div style={{ color: "#4b6280", fontSize: "0.78rem" }}>Click to replace</div>
+                <div className={`w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center ${isDark ? "bg-sky-500/20" : "bg-sky-100"}`}>
+                  <UploadCloud className="w-7 h-7 text-sky-400" />
+                </div>
+                <div className="text-sky-400 font-semibold mb-1">{resumeFile.name}</div>
+                <div className={`text-sm ${isDark ? "text-slate-500" : "text-slate-400"}`}>Click to replace</div>
               </>
             ) : (
               <>
-                <div style={{ fontSize: "2.2rem", marginBottom: "0.7rem", opacity: 0.4 }}>📋</div>
-                <div style={{ color: "#6b8aad", fontWeight: 500, marginBottom: "0.4rem" }}>Drop your resume here</div>
-                <div style={{ color: "#4b6280", fontSize: "0.78rem" }}>PDF or TXT · Click to browse</div>
+                <div className={`w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center ${isDark ? "bg-slate-800" : "bg-slate-200"}`}>
+                  <UploadCloud className={`w-7 h-7 ${isDark ? "text-slate-400" : "text-slate-500"}`} />
+                </div>
+                <div className={`font-medium mb-1 ${isDark ? "text-slate-300" : "text-slate-700"}`}>Drop your resume here</div>
+                <div className={`text-sm ${isDark ? "text-slate-500" : "text-slate-400"}`}>PDF or TXT · Click to browse</div>
               </>
             )}
           </div>
 
           {error && (
-            <div style={{ color: "#f87171", fontSize: "0.82rem", textAlign: "center", marginBottom: "1rem", padding: "0.6rem", background: "rgba(248,113,113,0.08)", borderRadius: 8, border: "1px solid rgba(248,113,113,0.2)" }}>
-              ⚠ {error}
+            <div className={`flex items-center gap-2 text-sm p-3 rounded-xl mb-5 ${isDark ? "bg-red-500/10 border border-red-500/30 text-red-400" : "bg-red-50 border border-red-200 text-red-600"}`}>
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              {error}
             </div>
           )}
 
           {/* Feature Pills */}
-          <div style={{ display: "flex", gap: 8, marginBottom: "1.8rem", flexWrap: "wrap" }}>
-            {[["🎤", "Resume-tailored Q&A"], ["📊", "Scored out of 100"], ["💡", "Hire tips"], ["⚡", "Skip any question"]].map(([icon, label]) => (
-              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 20, padding: "5px 12px", fontSize: "0.75rem", color: "#6b8aad" }}>
-                <span>{icon}</span><span>{label}</span>
+          <div className="flex flex-wrap gap-3 mb-8">
+            {[
+              { icon: Mic, label: "Resume-tailored Q&A" },
+              { icon: BarChart3, label: "Scored out of 100" },
+              { icon: Lightbulb, label: "Hire tips" },
+              { icon: Zap, label: "Skip any question" },
+            ].map(({ icon: Icon, label }) => (
+              <div
+                key={label}
+                className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm ${isDark ? "bg-slate-800/50 border border-slate-700 text-slate-400" : "bg-white border border-slate-200 text-slate-600"}`}
+              >
+                <Icon className="w-4 h-4 text-sky-400" />
+                <span>{label}</span>
               </div>
             ))}
           </div>
@@ -310,24 +336,31 @@ const handleStartInterview = async () => {
           <button
             onClick={handleStartInterview}
             disabled={!resumeFile || loading}
-            style={{
-              width: "100%", padding: "1rem",
-              background: resumeFile && !loading ? "linear-gradient(135deg, #38bdf8, #6366f1)" : "rgba(255,255,255,0.05)",
-              border: "none", borderRadius: 14,
-              cursor: resumeFile && !loading ? "pointer" : "not-allowed",
-              color: resumeFile && !loading ? "#fff" : "#2e4060",
-              fontFamily: "'Sora', sans-serif", fontSize: "0.97rem", fontWeight: 700, letterSpacing: "0.03em",
-              transition: "all 0.3s",
-              boxShadow: resumeFile && !loading ? "0 6px 30px rgba(56,189,248,0.25)" : "none",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-            }}
+            className={`
+              w-full py-4 rounded-xl font-bold text-base tracking-wide mb-2
+              flex items-center justify-center gap-3 transition-all duration-200
+              disabled:opacity-50 disabled:cursor-not-allowed
+              ${resumeFile && !loading
+                ? "bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:-translate-y-0.5"
+                : isDark
+                  ? "bg-slate-800 text-slate-600"
+                  : "bg-slate-200 text-slate-400"
+              }
+            `}
           >
             {loading ? (
               <>
-                <div style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                <div className="w-5 h-5 border-2 border-slate-400/30 border-t-white rounded-full animate-spin" />
                 Analyzing Resume...
               </>
-            ) : resumeFile ? "Start Interview →" : "Upload Resume to Begin"}
+            ) : resumeFile ? (
+              <>
+                <Sparkles className="w-5 h-5" />
+                Start Interview →
+              </>
+            ) : (
+              "Upload Resume to Begin"
+            )}
           </button>
         </div>
       </div>
@@ -339,88 +372,133 @@ const handleStartInterview = async () => {
     const progress = (questionNumber / TOTAL_QUESTIONS) * 100;
 
     return (
-      <div style={{ ...BASE_STYLES.page, height: "100vh", justifyContent: "flex-start" }}>
-        <style>{GLOBAL_CSS}</style>
-
+      <div className={`min-h-screen flex flex-col ${isDark ? "bg-slate-950" : "bg-slate-50"}`}>
         {/* Header */}
-        <div style={{ width: "100%", maxWidth: 760, padding: "1.2rem 0 0.6rem", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.8rem" }}>
-            <div style={BASE_STYLES.navBrand}>
-              <div style={BASE_STYLES.navDot}>🎯</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: 700 }}>Interview Agent</div>
+        <div className={`flex items-center justify-between px-6 py-4 border-b ${isDark ? "border-slate-800/50" : "border-slate-200"}`}>
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center ${isDark ? "shadow-lg shadow-sky-500/30" : "shadow-lg shadow-sky-200"}`}>
+              <Target className="w-5 h-5 text-white" />
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ fontSize: "0.8rem", color: "#6b8aad" }}>
-                Question <span style={{ color: "#38bdf8", fontWeight: 700 }}>{questionNumber}</span>
-                <span style={{ color: "#2e4060" }}> / {TOTAL_QUESTIONS}</span>
-              </div>
-              <button onClick={handleReset} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", color: "#4b6280", padding: "5px 12px", borderRadius: 8, cursor: "pointer", fontSize: "0.75rem", fontFamily: "'Sora', sans-serif" }}>
-                ✕ Quit
-              </button>
-            </div>
+            <div className={`font-bold ${isDark ? "text-white" : "text-slate-900"}`}>Interview Agent</div>
           </div>
-          <div style={{ height: 3, background: "rgba(255,255,255,0.05)", borderRadius: 2 }}>
-            <div style={{ height: "100%", background: "linear-gradient(90deg, #38bdf8, #6366f1)", borderRadius: 2, width: `${progress}%`, transition: "width 0.6s ease", boxShadow: "0 0 8px rgba(56,189,248,0.5)" }} />
+
+          <div className="flex items-center gap-4">
+            <div className={`text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+              Question <span className="text-sky-400 font-bold">{questionNumber}</span>
+              <span className={isDark ? "text-slate-600" : "text-slate-400"}> / {TOTAL_QUESTIONS}</span>
+            </div>
+            <button
+              onClick={handleReset}
+              className={`text-sm px-4 py-2 rounded-lg border transition-all ${isDark ? "border-slate-700 text-slate-500 hover:border-red-500/50 hover:text-red-400" : "border-slate-300 text-slate-500 hover:border-red-400 hover:text-red-500"}`}
+            >
+              Quit
+            </button>
           </div>
         </div>
 
-        {/* Chat */}
-        <div style={{ flex: 1, width: "100%", maxWidth: 760, overflowY: "auto", padding: "0.8rem 0", display: "flex", flexDirection: "column" }}>
-          {messages.map((msg, i) => (
-            <div key={i} style={{ display: "flex", flexDirection: msg.role === "assistant" ? "row" : "row-reverse", alignItems: "flex-start", gap: 12, marginBottom: "1.2rem", animation: "fadeUp 0.35s ease" }}>
-              {msg.role === "assistant" && (
-                <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, background: "linear-gradient(135deg, #38bdf8, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 700, color: "#fff", boxShadow: "0 0 14px rgba(56,189,248,0.3)" }}>AI</div>
-              )}
-              <div style={{ maxWidth: "75%", background: msg.role === "assistant" ? "rgba(56,189,248,0.06)" : "rgba(99,102,241,0.1)", border: msg.role === "assistant" ? "1px solid rgba(56,189,248,0.15)" : "1px solid rgba(99,102,241,0.2)", borderRadius: msg.role === "assistant" ? "4px 16px 16px 16px" : "16px 4px 16px 16px", padding: "12px 16px", fontSize: "0.9rem", lineHeight: 1.7, color: "#c8d8ec", whiteSpace: "pre-wrap" }}>
-                {msg.content}
-                {msg.role === "assistant" && msg.context && (
-                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(56,189,248,0.1)", fontSize: "0.72rem", color: "#38bdf855", fontStyle: "italic" }}>
-                    💬 {msg.context}
-                  </div>
-                )}
-              </div>
-              {msg.role === "user" && (
-                <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, background: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem" }}>👤</div>
-              )}
-            </div>
-          ))}
+        {/* Progress Bar */}
+        <div className={`h-1 ${isDark ? "bg-slate-800/50" : "bg-slate-200"}`}>
+          <div
+            className="h-full bg-gradient-to-r from-sky-400 to-indigo-500 transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
 
-          {loading && (
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: "1.2rem" }}>
-              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg, #38bdf8, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 700, color: "#fff", animation: "pulse 1.5s infinite" }}>AI</div>
-              <div style={{ background: "rgba(56,189,248,0.06)", border: "1px solid rgba(56,189,248,0.12)", borderRadius: "4px 16px 16px 16px", padding: "12px 18px", display: "flex", gap: 6, alignItems: "center" }}>
-                {[0, 1, 2].map(i => <div key={i} style={{ width: 7, height: 7, borderRadius: "50%", background: "#38bdf8", animation: "bounce 1.2s infinite", animationDelay: `${i * 0.18}s` }} />)}
+        {/* Chat */}
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <div className="max-w-3xl mx-auto space-y-5">
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-fadeIn`}
+              >
+                <div className={`flex items-start gap-3 max-w-[80%] ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                  {msg.role === "assistant" ? (
+                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center flex-shrink-0 ${isDark ? "shadow-lg shadow-sky-500/20" : "shadow-md shadow-sky-200"}`}>
+                      <Bot className="w-5 h-5 text-white" />
+                    </div>
+                  ) : (
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isDark ? "bg-indigo-500/20 border border-indigo-500/30" : "bg-indigo-100 border border-indigo-200"}`}>
+                      <User className="w-5 h-5 text-indigo-500" />
+                    </div>
+                  )}
+                  <div className={`
+                    px-5 py-4 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap
+                    ${msg.role === "assistant"
+                      ? isDark
+                        ? "bg-sky-500/10 border border-sky-500/20 rounded-tl-2xl text-slate-200"
+                        : "bg-sky-50 border border-sky-200 rounded-tl-2xl text-slate-700"
+                      : isDark
+                        ? "bg-indigo-500/15 border border-indigo-500/25 rounded-tr-2xl text-white"
+                        : "bg-indigo-100 border border-indigo-200 rounded-tr-2xl text-slate-800"
+                    }
+                  `}>
+                    {msg.content}
+                    {msg.role === "assistant" && msg.context && (
+                      <div className={`mt-3 pt-3 border-t text-xs italic ${isDark ? "border-sky-500/20 text-sky-400/60" : "border-sky-200 text-sky-600"}`}>
+                        💬 {msg.context}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
-          <div ref={chatBottomRef} />
+            ))}
+
+            {loading && (
+              <div className="flex items-start gap-3">
+                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center flex-shrink-0 ${isDark ? "shadow-lg shadow-sky-500/20" : "shadow-md shadow-sky-200"}`}>
+                  <Bot className="w-5 h-5 text-white" />
+                </div>
+                <div className={`px-5 py-4 rounded-2xl rounded-tl-2xl flex items-center gap-2 ${isDark ? "bg-sky-500/10 border border-sky-500/20" : "bg-sky-50 border border-sky-200"}`}>
+                  <div className="flex gap-1">
+                    <span className="w-2 h-2 rounded-full bg-sky-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-2 h-2 rounded-full bg-sky-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-2 h-2 rounded-full bg-sky-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={chatBottomRef} />
+          </div>
         </div>
 
         {/* Input */}
         {!loading && (
-          <div style={{ width: "100%", maxWidth: 760, padding: "0.6rem 0 1.5rem", flexShrink: 0 }}>
-            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "1rem 1rem 0.75rem" }}>
-              <textarea
-                ref={inputRef}
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendAnswer(userInput); } }}
-                placeholder="Type your answer here... (Enter to send · Shift+Enter for new line)"
-                rows={3}
-                style={{ width: "100%", background: "transparent", border: "none", color: "#c8d8ec", fontFamily: "'Sora', sans-serif", fontSize: "0.9rem", lineHeight: 1.7, resize: "none", caretColor: "#38bdf8" }}
-              />
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "0.6rem", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                <button onClick={handleSkip} style={{ background: "transparent", border: "1px solid rgba(248,113,113,0.2)", color: "rgba(248,113,113,0.6)", padding: "6px 16px", borderRadius: 8, cursor: "pointer", fontSize: "0.78rem", fontFamily: "'Sora', sans-serif", transition: "all 0.2s" }}
-                  onMouseEnter={e => { e.target.style.background = "rgba(248,113,113,0.08)"; e.target.style.color = "#f87171"; }}
-                  onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = "rgba(248,113,113,0.6)"; }}>
-                  Skip / Don't Know
-                </button>
-                <button
-                  onClick={() => handleSendAnswer(userInput)}
-                  disabled={!userInput.trim()}
-                  style={{ background: userInput.trim() ? "linear-gradient(135deg, #38bdf8, #6366f1)" : "rgba(255,255,255,0.05)", border: "none", borderRadius: 8, color: userInput.trim() ? "#fff" : "#2e4060", padding: "7px 22px", fontWeight: 700, fontSize: "0.85rem", fontFamily: "'Sora', sans-serif", cursor: userInput.trim() ? "pointer" : "not-allowed", transition: "all 0.2s", boxShadow: userInput.trim() ? "0 3px 14px rgba(56,189,248,0.3)" : "none" }}>
-                  Send →
-                </button>
+          <div className={`px-6 pb-6 pt-4 border-t ${isDark ? "border-slate-800/50 bg-slate-950/80" : "border-slate-200 bg-white/80"}`}>
+            <div className="max-w-3xl mx-auto">
+              <div className={`rounded-2xl border p-4 ${isDark ? "bg-slate-900/80 border-slate-700" : "bg-white border-slate-200"}`}>
+                <textarea
+                  ref={inputRef}
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendAnswer(userInput); } }}
+                  placeholder="Type your answer here... (Enter to send · Shift+Enter for new line)"
+                  rows={3}
+                  className={`w-full bg-transparent border-none resize-none text-sm leading-relaxed focus:ring-0 focus:outline-none ${isDark ? "text-slate-200 placeholder-slate-500" : "text-slate-700 placeholder-slate-400"}`}
+                />
+                <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
+                  <button
+                    onClick={handleSkip}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all ${isDark ? "border-red-500/30 text-red-400/70 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50" : "border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300"}`}
+                  >
+                    <SkipForward className="w-4 h-4" />
+                    Skip / Don't Know
+                  </button>
+                  <button
+                    onClick={() => handleSendAnswer(userInput)}
+                    disabled={!userInput.trim()}
+                    className={`
+                      flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-bold transition-all
+                      ${userInput.trim()
+                        ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30"
+                        : isDark ? "bg-slate-800 text-slate-600" : "bg-slate-200 text-slate-400"
+                      }
+                    `}
+                  >
+                    <Send className="w-4 h-4" />
+                    Send
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -432,93 +510,117 @@ const handleStartInterview = async () => {
   // ── RESULTS PHASE ──────────────────────────────────────────────────────────
   if (phase === "results" && result) {
     const gradeColor = result.score >= 75 ? "#4ade80" : result.score >= 50 ? "#facc15" : "#f87171";
+    const gradeLabel = result.score >= 75 ? "Strong" : result.score >= 50 ? "Average" : "Needs Work";
 
     return (
-      <div style={BASE_STYLES.page}>
-        <style>{GLOBAL_CSS}</style>
-
-        {/* Nav */}
-        <div style={{ width: "100%", maxWidth: 760, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.5rem 0", borderBottom: "1px solid rgba(255,255,255,0.05)", marginBottom: "1.5rem" }}>
-          <div style={BASE_STYLES.navBrand}>
-            <div style={BASE_STYLES.navDot}>🎯</div>
-            <div>
-              <div style={{ fontSize: "1rem", fontWeight: 700 }}>Interview Complete</div>
-              <div style={{ fontSize: "0.72rem", color: "#4b6280", marginTop: 1 }}>{resumeFile?.name}</div>
+      <div className={`min-h-screen ${isDark ? "bg-slate-950" : "bg-slate-50"} pb-12`}>
+        <div className="max-w-3xl mx-auto px-4">
+          {/* Nav */}
+          <div className={`flex items-center justify-between py-6 border-b ${isDark ? "border-slate-800/50" : "border-slate-200"}`}>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center ${isDark ? "shadow-lg shadow-sky-500/30" : "shadow-lg shadow-sky-200"}`}>
+                <Target className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <div className={`font-bold ${isDark ? "text-white" : "text-slate-900"}`}>Interview Complete</div>
+                <div className={`text-xs ${isDark ? "text-slate-500" : "text-slate-400"}`}>{resumeFile?.name}</div>
+              </div>
             </div>
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-bold text-sm shadow-lg shadow-sky-500/20 hover:shadow-sky-500/30 transition-all"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Practice Again
+            </button>
           </div>
-          <button onClick={handleReset} style={{ background: "linear-gradient(135deg, #38bdf8, #6366f1)", border: "none", borderRadius: 10, cursor: "pointer", color: "#fff", padding: "8px 18px", fontSize: "0.82rem", fontWeight: 700, fontFamily: "'Sora', sans-serif", boxShadow: "0 4px 16px rgba(56,189,248,0.25)" }}>
-            🔄 Practice Again
-          </button>
-        </div>
-
-        <div style={{ width: "100%", maxWidth: 760, paddingBottom: "3rem", animation: "fadeUp 0.5s ease" }}>
 
           {/* Score Card */}
-          <div style={{ background: "linear-gradient(135deg, rgba(56,189,248,0.08), rgba(99,102,241,0.06))", border: "1px solid rgba(56,189,248,0.18)", borderRadius: 20, padding: "2rem", display: "flex", alignItems: "center", gap: "2rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <ScoreRing score={result.score} />
-              <div style={{ fontSize: "0.72rem", color: "#4b6280", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.08em" }}>Score</div>
-            </div>
-            <div style={{ flex: 1, minWidth: 200 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "0.6rem" }}>
-                <span style={{ fontSize: "2rem", fontWeight: 700, color: gradeColor, fontFamily: "'JetBrains Mono', monospace", textShadow: `0 0 20px ${gradeColor}55` }}>{result.grade}</span>
-                <span style={{ background: `${gradeColor}18`, border: `1px solid ${gradeColor}33`, color: gradeColor, padding: "3px 10px", borderRadius: 20, fontSize: "0.75rem", fontWeight: 600 }}>{result.performance}</span>
+          <div className={`rounded-2xl border p-6 mt-6 ${isDark ? "bg-gradient-to-br from-sky-500/10 to-indigo-500/10 border-sky-500/20" : "bg-gradient-to-br from-sky-50 to-indigo-50 border-sky-200"}`}>
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="text-center">
+                <ScoreRing score={result.score} isDark={isDark} />
+                <div className={`text-xs uppercase tracking-widest mt-2 ${isDark ? "text-slate-500" : "text-slate-400"}`}>Score</div>
               </div>
-              <p style={{ color: "#8faac0", fontSize: "0.88rem", lineHeight: 1.7, marginBottom: "0.8rem" }}>{result.summary}</p>
-              {result.skippedQuestions > 0 && (
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)", borderRadius: 8, padding: "4px 12px", fontSize: "0.78rem", color: "#f87171" }}>
-                  ⚠ {result.skippedQuestions} question{result.skippedQuestions !== 1 ? "s" : ""} skipped
+              <div className="flex-1 text-center sm:text-left">
+                <div className="flex items-center justify-center sm:justify-start gap-3 mb-3">
+                  <span className="text-3xl font-bold font-mono" style={{ color: gradeColor }}>{result.grade}</span>
+                  <span
+                    className="px-3 py-1 rounded-full text-xs font-semibold border"
+                    style={{ backgroundColor: `${gradeColor}15`, color: gradeColor, borderColor: `${gradeColor}30` }}
+                  >
+                    {result.performance}
+                  </span>
                 </div>
-              )}
+                <p className={`text-sm leading-relaxed mb-3 ${isDark ? "text-slate-400" : "text-slate-600"}`}>{result.summary}</p>
+                {result.skippedQuestions > 0 && (
+                  <span className={`inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg ${isDark ? "bg-red-500/10 border border-red-500/30 text-red-400" : "bg-red-50 border border-red-200 text-red-500"}`}>
+                    <AlertCircle className="w-3 h-3" />
+                    {result.skippedQuestions} question{result.skippedQuestions !== 1 ? "s" : ""} skipped
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Strengths & Weaknesses */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
-            <div style={{ background: "rgba(74,222,128,0.04)", border: "1px solid rgba(74,222,128,0.14)", borderRadius: 16, padding: "1.2rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "1rem" }}>
-                <span>✅</span>
-                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#4ade80", textTransform: "uppercase", letterSpacing: "0.08em" }}>Strengths</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+            {/* Strengths */}
+            <div className={`rounded-2xl border p-5 ${isDark ? "bg-emerald-500/5 border-emerald-500/20" : "bg-emerald-50 border-emerald-200"}`}>
+              <div className="flex items-center gap-2 mb-4">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">Strengths</span>
               </div>
-              {result.strengths?.map((s, i) => (
-                <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: "0.6rem", fontSize: "0.84rem", color: "#8faac0", lineHeight: 1.6 }}>
-                  <span style={{ color: "#4ade80", flexShrink: 0, marginTop: 1 }}>›</span> {s}
-                </div>
-              ))}
+              <ul className="space-y-3">
+                {result.strengths?.map((s, i) => (
+                  <li key={i} className={`flex gap-2 text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                    <span className="text-emerald-400 flex-shrink-0 mt-1">›</span>
+                    <span className="leading-relaxed">{s}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div style={{ background: "rgba(248,113,113,0.04)", border: "1px solid rgba(248,113,113,0.14)", borderRadius: 16, padding: "1.2rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "1rem" }}>
-                <span>⚠️</span>
-                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#f87171", textTransform: "uppercase", letterSpacing: "0.08em" }}>Areas to Improve</span>
+            {/* Weaknesses */}
+            <div className={`rounded-2xl border p-5 ${isDark ? "bg-red-500/5 border-red-500/20" : "bg-red-50 border-red-200"}`}>
+              <div className="flex items-center gap-2 mb-4">
+                <AlertCircle className="w-5 h-5 text-red-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-red-400">Areas to Improve</span>
               </div>
-              {result.weaknesses?.map((w, i) => (
-                <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: "0.6rem", fontSize: "0.84rem", color: "#8faac0", lineHeight: 1.6 }}>
-                  <span style={{ color: "#f87171", flexShrink: 0, marginTop: 1 }}>›</span> {w}
-                </div>
-              ))}
+              <ul className="space-y-3">
+                {result.weaknesses?.map((w, i) => (
+                  <li key={i} className={`flex gap-2 text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                    <span className="text-red-400 flex-shrink-0 mt-1">›</span>
+                    <span className="leading-relaxed">{w}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
           {/* Tips to Get Hired */}
-          <div style={{ background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.15)", borderRadius: 16, padding: "1.4rem" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "1.2rem" }}>
-              <span style={{ fontSize: "1.1rem" }}>💡</span>
-              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.08em" }}>Tips to Get Hired</span>
+          <div className={`rounded-2xl border p-5 mt-5 ${isDark ? "bg-indigo-500/5 border-indigo-500/20" : "bg-indigo-50 border-indigo-200"}`}>
+            <div className="flex items-center gap-2 mb-4">
+              <Lightbulb className="w-5 h-5 text-indigo-400" />
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Tips to Get Hired</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+            <div className="space-y-3">
               {result.tipsToGetHired?.map((tip, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, padding: "0.9rem 1rem" }}>
-                  <div style={{ width: 24, height: 24, borderRadius: "50%", flexShrink: 0, background: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 700, color: "#818cf8", fontFamily: "'JetBrains Mono', monospace" }}>{i + 1}</div>
+                <div
+                  key={i}
+                  className={`flex gap-4 p-4 rounded-xl ${isDark ? "bg-slate-900/50 border border-slate-800" : "bg-white border border-slate-200"}`}
+                >
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm font-bold ${isDark ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30" : "bg-indigo-100 text-indigo-600"}`}>
+                    {i + 1}
+                  </div>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: "0.88rem", color: "#c8d8ec", marginBottom: "0.25rem" }}>{tip.tip}</div>
-                    <div style={{ fontSize: "0.82rem", color: "#6b8aad", lineHeight: 1.6 }}>{tip.detail}</div>
+                    <div className={`font-semibold text-sm mb-1 ${isDark ? "text-slate-200" : "text-slate-800"}`}>{tip.tip}</div>
+                    <div className={`text-sm leading-relaxed ${isDark ? "text-slate-400" : "text-slate-600"}`}>{tip.detail}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
         </div>
       </div>
     );

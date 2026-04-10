@@ -30,12 +30,14 @@ const Login = () => {
         e.preventDefault()
         setLoading(true);
         try {
+            console.log("Sending request to:", `/api/users/${state}`, formData);
             const { data } = await api.post(`/api/users/${state}`, formData);
             dispatch(login(data));
             localStorage.setItem('token', data.token);
             toast.success(data.message);
         } catch (error) {
-            toast.error(error.response.data.message);
+            console.error("Login error:", error);
+            toast.error(error.response?.data?.message || error.message || "Something went wrong");
         } finally {
             setLoading(false);
         }
