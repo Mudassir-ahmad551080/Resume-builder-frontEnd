@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from 'react'
+import React, { useEffect, Suspense, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
@@ -8,7 +8,7 @@ import { login, setLoading } from './app/features/authSlice.js'
 // ✅ Lazy Loading
 const Home = React.lazy(() => import('./pages/Home.jsx'))
 const Layout = React.lazy(() => import('./pages/Layout.jsx'))
-const Dashboard = React.lazy(() => import('./pages/Dashboard.jsx'))
+const DashboardLazy = React.lazy(() => import('./pages/Dashboard.jsx'))
 const ResumeBuilder = React.lazy(() => import('./pages/ResumeBuilder.jsx'))
 const ResumeAnalyzer = React.lazy(() => import('./components/ResumeAnalyzer.jsx'))
 const Preview = React.lazy(() => import('./pages/Preview.jsx'))
@@ -24,6 +24,7 @@ const LoadingSpinner = () => (
 
 const App = () => {
   const dispatch = useDispatch();
+  const [DashboardComp, setDashboardComp] = useState(null);
 
   const getuserData = async () => {
     const token = localStorage.getItem("token");
@@ -51,6 +52,26 @@ const App = () => {
     getuserData();
   }, []);
 
+  // Prefetch Dashboard for returning users so it's not lazily loaded again
+  useEffect(() => {
+    try {
+      const visited = localStorage.getItem('hasVisited_app_v1');
+      if (!visited) {
+        localStorage.setItem('hasVisited_app_v1', 'true');
+        // first-time visitor: keep lazy loading behavior
+      } else {
+        // returning visitor: preload the dashboard module and render eagerly
+        import('./pages/Dashboard.jsx')
+          .then((mod) => {
+            setDashboardComp(() => mod.default);
+          })
+          .catch((err) => console.error('Failed to preload Dashboard', err));
+      }
+    } catch (err) {
+      console.error('Error checking visit flag', err);
+    }
+  }, []);
+
   return (
     <>
       {/* ✅ Duplicate Toaster hata diya */}
@@ -59,7 +80,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='app' element={<Layout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={DashboardComp ? <DashboardComp /> : <DashboardLazy />} />
             <Route path='builder/:resumeId' element={<ResumeBuilder />} />
           </Route>
           <Route path='view/:resumeId' element={<Preview />} />
