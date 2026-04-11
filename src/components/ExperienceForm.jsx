@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 
 const ExperienceForm = ({ data, onChange }) => {
   const [theme] = useTheme();
+  const isLight = theme === 'ligth';
   const { token } = useSelector((state) => state.auth);
   const [loadingIndex, setLoadingIndex] = useState(null);
 
@@ -41,8 +42,8 @@ const ExperienceForm = ({ data, onChange }) => {
     }
     setLoadingIndex(index);
     try {
-      const response = await api.post('/api/ai/enhance-job-desc', 
-        { usercontent: currentDescription }, 
+      const response = await api.post('/api/ai/enhance-job-desc',
+        { usercontent: currentDescription },
         { headers: { Authorization: token } }
       );
       if (response.data && response.data.enhancedJobDescription) {
@@ -58,136 +59,171 @@ const ExperienceForm = ({ data, onChange }) => {
   };
 
   return (
-    <div id={theme} className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto">
       {/* Section Header */}
-      <div id={theme} className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <div id={theme}>
-          <h3 id={theme} className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-green-600" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+        <div>
+          <h3 className={`text-xl font-bold flex items-center gap-2 ${
+            isLight ? 'text-slate-800' : 'text-white'
+          }`}>
+            <Briefcase className={`w-5 h-5 ${isLight ? 'text-green-600' : 'text-green-400'}`} />
             Professional Experience
           </h3>
-          <p id={theme} className="text-sm text-gray-500 mt-1">
+          <p className={`text-sm mt-1 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
             Detail your career history to showcase your expertise.
           </p>
         </div>
         <button
-          id={theme}
           onClick={addExperience}
           type="button"
-          className=" flex items-center flex  gap-2 border  px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all duration-200 active:scale-95"
+          className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-sm font-medium rounded-xl shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300"
         >
-          <Plus size={16} className="group-hover:rotate-90 transition-transform duration-200" />
+          <Plus size={16} />
           Add Position
         </button>
       </div>
 
       {/* Empty State */}
       {data.length === 0 ? (
-        <div id={theme} className="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50/50 hover:bg-gray-50 transition-colors">
-          <div id={theme} className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <Briefcase className="w-8 h-8 text-gray-400" />
+        <div className={`flex flex-col items-center justify-center py-12 px-4 rounded-2xl border-2 border-dashed transition-colors ${
+          isLight
+            ? 'border-slate-200 bg-slate-50/50 hover:bg-slate-50'
+            : 'border-slate-700 bg-slate-800/50 hover:bg-slate-800'
+        }`}>
+          <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
+            isLight ? 'bg-slate-200' : 'bg-slate-700'
+          }`}>
+            <Briefcase className={`w-8 h-8 ${isLight ? 'text-slate-400' : 'text-slate-500'}`} />
           </div>
-          <h4 id={theme} className="text-lg font-medium text-gray-700">No experience added yet</h4>
-          <p id={theme} className="text-sm text-gray-500 mb-6 text-center max-w-sm">
+          <h4 className={`text-lg font-medium ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>No experience added yet</h4>
+          <p className={`text-sm text-center max-w-sm mb-6 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
             Start building your resume by adding your past work experience, internships, or freelance projects.
           </p>
           <button
-            id={theme}
             onClick={addExperience}
-            className="text-green-600 font-medium hover:text-green-700 hover:underline flex items-center gap-1"
+            className={`font-medium flex items-center gap-1 ${
+              isLight ? 'text-green-600 hover:text-green-700' : 'text-green-400 hover:text-green-500'
+            }`}
           >
             Click here to add your first job
           </button>
         </div>
       ) : (
-        /* Experience List */
-        <div id={theme} className="space-y-6">
+        <div className="space-y-6">
           {data.map((experience, index) => (
-            <div 
+            <div
               key={index}
-              id={theme} 
-              className="group relative bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-6"
+              className={`rounded-2xl shadow-lg transition-all duration-300 p-6 ${
+                isLight
+                  ? 'bg-white border border-slate-200 hover:shadow-xl'
+                  : 'bg-slate-800/80 border border-slate-700 hover:shadow-xl hover:shadow-slate-900/50'
+              }`}
             >
               {/* Card Header & Delete */}
-              <div id={theme} className="flex items-center justify-between mb-6">
-                <div id={theme} className="flex items-center gap-3">
-                  <span id={theme} className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold text-sm">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <span className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
+                    isLight
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                      : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                  }`}>
                     {index + 1}
                   </span>
-                  <h4 id={theme} className="text-lg font-semibold text-gray-800">
+                  <h4 className={`text-lg font-semibold ${
+                    isLight ? 'text-slate-800' : 'text-white'
+                  }`}>
                     {experience.position || "Untitled Position"}
                   </h4>
                 </div>
-                <button 
-                  id={theme}
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => removeExperience(index)}
-                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                  title="Remove this experience"
+                  className={`p-2 rounded-full transition-colors ${
+                    isLight
+                      ? 'text-slate-400 hover:text-red-500 hover:bg-red-50'
+                      : 'text-slate-500 hover:text-red-400 hover:bg-red-500/10'
+                  }`}
                 >
                   <Trash2 size={18} />
                 </button>
               </div>
 
               {/* Form Grid */}
-              <div id={theme} className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 {/* Position Title */}
-                <div id={theme} className="space-y-1.5">
-                  <label id={theme} className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-1">
+                <div className="space-y-2">
+                  <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
+                    isLight ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
                     <User size={12} /> Job Title
                   </label>
                   <input
-                    id={theme}
                     type="text"
                     placeholder="e.g. Senior Software Engineer"
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all outline-none"
+                    className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
+                      isLight
+                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
+                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                    }`}
                     value={experience.position || ""}
                     onChange={(e) => updateExperience(index, "position", e.target.value)}
                   />
                 </div>
 
                 {/* Company Name */}
-                <div id={theme} className="space-y-1.5">
-                  <label id={theme} className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-1">
+                <div className="space-y-2">
+                  <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
+                    isLight ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
                     <Building2 size={12} /> Employer
                   </label>
                   <input
-                    id={theme}
                     type="text"
                     placeholder="e.g. Google Inc."
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all outline-none"
+                    className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
+                      isLight
+                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
+                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                    }`}
                     value={experience.company || ""}
                     onChange={(e) => updateExperience(index, "company", e.target.value)}
                   />
                 </div>
 
                 {/* Start Date */}
-                <div id={theme} className="space-y-1.5">
-                  <label id={theme} className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-1">
+                <div className="space-y-2">
+                  <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
+                    isLight ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
                     <Calendar size={12} /> Start Date
                   </label>
                   <input
-                    id={theme}
                     type="month"
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all outline-none"
+                    className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
+                      isLight
+                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800'
+                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white'
+                    }`}
                     value={experience.start_date || ""}
                     onChange={(e) => updateExperience(index, "start_date", e.target.value)}
                   />
                 </div>
 
                 {/* End Date */}
-                <div id={theme} className="space-y-1.5">
-                  <label id={theme} className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-1">
+                <div className="space-y-2">
+                  <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
+                    isLight ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
                     <Calendar size={12} /> End Date
                   </label>
                   <input
-                    id={theme}
                     type="month"
-                    className={`w-full px-4 py-2.5 border rounded-lg text-sm outline-none transition-all ${
-                      experience.is_current 
-                        ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed" 
-                        : "bg-gray-50 border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white"
+                    className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all ${
+                      experience.is_current
+                        ? `${isLight ? 'bg-slate-100' : 'bg-slate-800'} ${isLight ? 'border-slate-200' : 'border-slate-700'} ${isLight ? 'text-slate-400' : 'text-slate-500'} cursor-not-allowed`
+                        : isLight
+                          ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800'
+                          : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white'
                     }`}
                     disabled={experience.is_current}
                     value={experience.end_date || ""}
@@ -197,38 +233,42 @@ const ExperienceForm = ({ data, onChange }) => {
               </div>
 
               {/* Checkbox */}
-              <div id={theme} className="flex items-center gap-2 mb-6">
-                <input 
-                  id={theme}
-                  type="checkbox" 
-                  className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                  checked={experience.is_current || false} 
-                  onChange={(e) => updateExperience(index, 'is_current', e.target.checked)} 
+              <div className="flex items-center gap-2 mb-6">
+                <input
+                  type="checkbox"
+                  className={`w-5 h-5 rounded transition-colors ${
+                    isLight ? 'text-green-600 border-slate-300' : 'text-green-400 border-slate-600'
+                  }`}
+                  checked={experience.is_current || false}
+                  onChange={(e) => updateExperience(index, 'is_current', e.target.checked)}
                 />
-                <label id={theme} className="text-sm text-gray-700 cursor-pointer select-none">
+                <label className={`text-sm cursor-pointer ${
+                  isLight ? 'text-slate-700' : 'text-slate-300'
+                }`}>
                   I am currently working here
                 </label>
               </div>
 
               {/* Description Section with AI */}
-              <div id={theme} className="bg-gray-50/50 rounded-xl p-4 border border-gray-100">
-                <div id={theme} className="flex items-center justify-between mb-3">
-                  <label id={theme} className="text-sm font-semibold text-gray-700">
+              <div className={`rounded-xl p-4 ${
+                isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-900/50 border border-slate-700'
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <label className={`text-sm font-semibold ${
+                    isLight ? 'text-slate-700' : 'text-slate-300'
+                  }`}>
                     Responsibilities & Achievements
                   </label>
-                  
+
                   <button
-                    id={theme}
                     type="button"
                     onClick={() => handleEnhanceDescription(index)}
                     disabled={loadingIndex === index}
-                    className={`
-                      flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-md shadow-sm transition-all border
-                      ${loadingIndex === index 
-                        ? "bg-green-50 text-green-700 border-green-200 cursor-wait" 
-                        : "bg-white text-green-600 border-green-200 hover:bg-green-50 hover:border-green-300 hover:shadow-md"
-                      }
-                    `}
+                    className={`flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-lg shadow-sm transition-all ${
+                      loadingIndex === index
+                        ? 'bg-green-100 text-green-700 cursor-wait'
+                        : `bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:shadow-lg hover:shadow-green-500/30`
+                    }`}
                   >
                     {loadingIndex === index ? (
                       <Loader2 className="animate-spin w-3 h-3" />
@@ -238,26 +278,25 @@ const ExperienceForm = ({ data, onChange }) => {
                     {loadingIndex === index ? "Improving..." : "Enhance with AI"}
                   </button>
                 </div>
-                
-                <div id={theme} className="relative">
-                  <textarea
-                    id={theme}
-                    rows={5}
-                    value={experience.description || ''}
-                    onChange={(e) => updateExperience(index, 'description', e.target.value)}
-                    className="w-full p-3 text-sm text-gray-700 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none resize-y min-h-[100px] bg-white"
-                    placeholder="• Developed new features for the frontend using React...&#10;• Collaborated with backend team to optimize API endpoints..."
-                  />
-                  <div id={theme} className="absolute bottom-3 right-3 pointer-events-none">
-                     {/* Character count placeholder */}
-                  </div>
-                </div>
-                <p id={theme} className="text-xs text-gray-500 mt-2 flex items-center gap-1">
-                   <Sparkles className="w-3 h-3 text-yellow-500" />
-                   <span id={theme}>Tip: Write a rough draft, then let AI polish it for you.</span>
+
+                <textarea
+                  rows={5}
+                  value={experience.description || ''}
+                  onChange={(e) => updateExperience(index, 'description', e.target.value)}
+                  className={`w-full p-3 text-sm rounded-xl outline-none transition-all resize-y min-h-[100px] ${
+                    isLight
+                      ? 'bg-white border border-slate-200 text-slate-700 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20'
+                      : 'bg-slate-900 border border-slate-700 text-slate-300 placeholder-slate-500 focus:border-green-500 focus:ring-2 focus:ring-green-500/20'
+                  }`}
+                  placeholder="• Developed new features for the frontend using React...\n• Collaborated with backend team to optimize API endpoints..."
+                />
+                <p className={`text-xs mt-2 flex items-center gap-1 ${
+                  isLight ? 'text-slate-500' : 'text-slate-400'
+                }`}>
+                  <Sparkles className="w-3 h-3 text-yellow-500" />
+                  Tip: Write a rough draft, then let AI polish it for you.
                 </p>
               </div>
-
             </div>
           ))}
         </div>

@@ -44,6 +44,12 @@ const TemplateSelector = ({ SelectedTemplate, onChange }) => {
       name: "Simple",
       previewImage:
         "A straightforward and clean resume design that emphasizes clarity and organization.",
+    },
+    {
+      id: "executive-pro",
+      name: "Executive Pro",
+      previewImage:
+        "A premium two-column corporate layout with sidebar for maximum impact.",
     }
   ];
 

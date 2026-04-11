@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { dummyResumeData } from "../assets/assets";
 import { Link } from "react-router-dom";
 import {
   ArrowLeftIcon,
@@ -44,7 +43,7 @@ const ResumeBuilder = () => {
     _id: "",
     title: "",
     professional_summary: "",
-    personal_info: {}, // ✅ fixed spelling
+    personal_info: {}, // Γ£à fixed spelling
     experience: [],
     education: [],
     projects: [],

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(ls -la *.js)",
-      "Bash(dir /b *.js)"
+      "Bash(dir /b *.js)",
+      "Bash(npm run:*)"
     ]
   }
 }

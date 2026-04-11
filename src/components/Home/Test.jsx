@@ -2,90 +2,142 @@ import React from 'react'
 import mudassir from '../../image/mudassir.png'
 import ilyas from '../../image/ilyas.png'
 import { useTheme } from '../../context/ThemContext'
+import { Star, Quote } from 'lucide-react'
+
 const Test = () => {
     const [theme] = useTheme();
 
-     const cardsData = [
+    const cardsData = [
         {
             image: mudassir,
             name: 'Mudassir Ahmad',
-            handle: '@neilstellar',
+            handle: '@mudassir_dev',
+            role: 'Software Engineer',
+            text: 'This resume builder helped me land interviews at top tech companies. The AI suggestions were incredibly helpful!',
+            rating: 5,
         },
         {
             image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200',
             name: 'Anas Khan',
-            handle: '@averywrites',
+            handle: '@anaskhan',
+            role: 'Product Manager',
+            text: 'The templates are stunning and ATS-friendly. I got my resume shortlisted within days of applying.',
+            rating: 5,
         },
         {
-            image: ilyas
-            ,
-            name: 'Ilyas khan',
-            handle: '@jordantalks',
+            image: ilyas,
+            name: 'Ilyas Khan',
+            handle: '@ilyaskhan',
+            role: 'UX Designer',
+            text: 'Best resume builder I have ever used. The customization options are endless and the interface is intuitive.',
+            rating: 5,
         },
         {
             image: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&auto=format&fit=crop&q=60',
             name: 'Yasir Ali',
-            handle: '@averywrites',
+            handle: '@yasiralih',
+            role: 'Data Scientist',
+            text: 'Got hired at my dream company! The AI-powered suggestions really made my resume stand out from the crowd.',
+            rating: 5,
         },
     ];
 
     const CreateCard = ({ card }) => (
-        <div id={theme} className="p-4 rounded-lg mx-4 shadow hover:shadow-lg transition-all duration-200 w-72 shrink-0">
-            <div id={theme} className="flex gap-2">
-                <img id={theme} className="size-11 rounded-full" src={card.image} alt="User Image" />
-                <div id={theme} className="flex flex-col">
-                    <div id={theme} className="flex items-center gap-1">
-                        <p id={theme}>{card.name}</p>
-                        <svg className="mt-0.5 fill-green-500" width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M4.555.72a4 4 0 0 1-.297.24c-.179.12-.38.202-.59.244a4 4 0 0 1-.38.041c-.48.039-.721.058-.922.129a1.63 1.63 0 0 0-.992.992c-.071.2-.09.441-.129.922a4 4 0 0 1-.041.38 1.6 1.6 0 0 1-.245.59 3 3 0 0 1-.239.297c-.313.368-.47.551-.56.743-.213.444-.213.96 0 1.404.09.192.247.375.56.743.125.146.187.219.24.297.12.179.202.38.244.59.018.093.026.189.041.38.039.48.058.721.129.922.163.464.528.829.992.992.2.071.441.09.922.129.191.015.287.023.38.041.21.042.411.125.59.245.078.052.151.114.297.239.368.313.551.47.743.56.444.213.96.213 1.404 0 .192-.09.375-.247.743-.56.146-.125.219-.187.297-.24.179-.12.38-.202.59-.244a4 4 0 0 1 .38-.041c.48-.039.721-.058.922-.129.464-.163.829-.528.992-.992.071-.2.09-.441.129-.922a4 4 0 0 1 .041-.38c.042-.21.125-.411.245-.59.052-.078.114-.151.239-.297.313-.368.47-.551.56-.743.213-.444.213-.96 0-1.404-.09-.192-.247-.375-.56-.743a4 4 0 0 1-.24-.297 1.6 1.6 0 0 1-.244-.59 3 3 0 0 1-.041-.38c-.039-.48-.058-.721-.129-.922a1.63 1.63 0 0 0-.992-.992c-.2-.071-.441-.09-.922-.129a4 4 0 0 1-.38-.041 1.6 1.6 0 0 1-.59-.245A3 3 0 0 1 7.445.72C7.077.407 6.894.25 6.702.16a1.63 1.63 0 0 0-1.404 0c-.192.09-.375.247-.743.56m4.07 3.998a.488.488 0 0 0-.691-.69l-2.91 2.91-.958-.957a.488.488 0 0 0-.69.69l1.302 1.302c.19.191.5.191.69 0z" />
+        <div className={`group relative p-6 rounded-2xl mx-4 shrink-0 transition-all duration-500 hover:scale-[1.02] ${
+            theme === 'ligth'
+                ? 'bg-white shadow-lg hover:shadow-xl border border-slate-200'
+                : 'bg-slate-800/80 hover:shadow-xl border border-slate-700'
+        }`}>
+            {/* Quote Icon */}
+            <div className={`absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity ${
+                theme === 'ligth' ? 'text-green-600' : 'text-green-400'
+            }`}>
+                <Quote className="w-8 h-8" />
+            </div>
+
+            {/* Rating Stars */}
+            <div className="flex gap-1 mb-4">
+                {[...Array(card.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                ))}
+            </div>
+
+            {/* Text */}
+            <p className={`text-sm leading-relaxed mb-6 ${
+                theme === 'ligth' ? 'text-slate-600' : 'text-slate-400'
+            }`}>
+                "{card.text}"
+            </p>
+
+            {/* User Info */}
+            <div className="flex items-center gap-3">
+                <div className="relative">
+                    <img
+                        className="w-12 h-12 rounded-full object-cover border-2 border-green-500"
+                        src={card.image}
+                        alt={card.name}
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                     </div>
-                    <span className="text-xs text-slate-500">{card.handle}</span>
+                </div>
+                <div>
+                    <p className={`font-semibold ${theme === 'ligth' ? 'text-slate-800' : 'text-white'}`}>
+                        {card.name}
+                    </p>
+                    <p className={`text-xs ${theme === 'ligth' ? 'text-slate-500' : 'text-slate-500'}`}>
+                        {card.role}
+                    </p>
                 </div>
             </div>
-            <p id={theme} className="text-sm py-4 text-gray-800">Radiant made undercutting all of our competitors an absolute breeze.</p>
         </div>
     );
 
-
-  return (
-    <>
+    return (
+        <>
             <style>{`
-            @keyframes marqueeScroll {
-                0% { transform: translateX(0%); }
-                100% { transform: translateX(-50%); }
-            }
+                @keyframes marqueeScroll {
+                    0% { transform: translateX(0%); }
+                    100% { transform: translateX(-50%); }
+                }
 
-            .marquee-inner {
-                animation: marqueeScroll 25s linear infinite;
-            }
+                .marquee-inner {
+                    animation: marqueeScroll 30s linear infinite;
+                }
 
-            .marquee-reverse {
-                animation-direction: reverse;
-            }
-        `}</style>
+                .marquee-reverse {
+                    animation-direction: reverse;
+                }
+            `}</style>
 
-            <div className="marquee-row w-full mx-auto max-w-5xl overflow-hidden relative">
-                <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white to-transparent"></div>
-                <div className="marquee-inner flex transform-gpu min-w-[200%] pt-10 pb-5">
+            {/* First Row */}
+            <div className="relative w-full max-w-6xl mx-auto overflow-hidden">
+                {/* Gradient Fade Edges */}
+                <div className="absolute left-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-r from-slate-50 dark:from-slate-900 to-transparent"></div>
+                <div className="absolute right-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-l from-slate-50 dark:from-slate-900 to-transparent"></div>
+
+                <div className="marquee-inner flex transform-gpu min-w-[200%] py-6">
                     {[...cardsData, ...cardsData].map((card, index) => (
-                        <CreateCard key={index} card={card} />
+                        <CreateCard key={`row1-${index}`} card={card} />
                     ))}
                 </div>
-                <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white to-transparent"></div>
             </div>
 
-            <div className="marquee-row w-full mx-auto max-w-5xl overflow-hidden relative">
-                <div className="absolute left-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-r from-white to-transparent"></div>
-                <div className="marquee-inner marquee-reverse flex transform-gpu min-w-[200%] pt-10 pb-5">
+            {/* Second Row - Reverse */}
+            <div className="relative w-full max-w-6xl mx-auto overflow-hidden mt-4">
+                <div className="absolute left-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-r from-slate-50 dark:from-slate-900 to-transparent"></div>
+                <div className="absolute right-0 top-0 h-full w-24 z-10 pointer-events-none bg-gradient-to-l from-slate-50 dark:from-slate-900 to-transparent"></div>
+
+                <div className="marquee-inner marquee-reverse flex transform-gpu min-w-[200%] py-6">
                     {[...cardsData, ...cardsData].map((card, index) => (
-                        <CreateCard key={index} card={card} />
+                        <CreateCard key={`row2-${index}`} card={card} />
                     ))}
                 </div>
-                <div className="absolute right-0 top-0 h-full w-20 md:w-40 z-10 pointer-events-none bg-gradient-to-l from-white to-transparent"></div>
             </div>
         </>
-  )
+    )
 }
 
 export default Test

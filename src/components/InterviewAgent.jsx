@@ -513,10 +513,10 @@ const InterviewAgent = () => {
     const gradeLabel = result.score >= 75 ? "Strong" : result.score >= 50 ? "Average" : "Needs Work";
 
     return (
-      <div className={`min-h-screen ${isDark ? "bg-slate-950" : "bg-slate-50"} pb-12`}>
-        <div className="max-w-3xl mx-auto px-4">
+      <div className={`min-h-screen ${isDark ? "bg-slate-950" : "bg-slate-50"}`}>
+        <div className="max-w-3xl mx-auto px-4 py-6">
           {/* Nav */}
-          <div className={`flex items-center justify-between py-6 border-b ${isDark ? "border-slate-800/50" : "border-slate-200"}`}>
+          <div className={`flex items-center justify-between py-6 ${isDark ? "border-slate-800/50" : "border-slate-200"}`}>
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center ${isDark ? "shadow-lg shadow-sky-500/30" : "shadow-lg shadow-sky-200"}`}>
                 <Target className="w-5 h-5 text-white" />

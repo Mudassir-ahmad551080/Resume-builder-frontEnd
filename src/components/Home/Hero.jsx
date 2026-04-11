@@ -6,19 +6,17 @@ import { IoSunnyOutline } from "react-icons/io5";
 import logo from '../../../public/logo.svg';
 import { ReactTyped } from "react-typed";
 import { useSelector } from 'react-redux';
+import { Menu, X, ChevronDown, Sparkles } from 'lucide-react';
 
 const Hero = () => {
-    // State for the mobile menu visibility
     const [menuOpen, setMenuOpen] = useState(false);
     const { user } = useSelector(state => state.auth);
-    // ⭐ New State for the smart navbar logic ⭐
-    // State to control the visibility/positioning of the Navbar
     const [showNavbar, setShowNavbar] = useState(true);
-    // State to store the previous scroll position
     const [lastScrollY, setLastScrollY] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    // ⭐ New Effect Hook to handle the scroll event ⭐
     useEffect(() => {
+        setIsLoaded(true);
         const handleScroll = () => {
             if (window.scrollY < lastScrollY && window.scrollY > 50) {
                 setShowNavbar(true);
@@ -27,30 +25,21 @@ const Hero = () => {
             } else if (window.scrollY <= 50) {
                 setShowNavbar(true);
             }
-
-            // Update the last scroll position for the next comparison
             setLastScrollY(window.scrollY);
         };
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [lastScrollY]); // Dependency array ensures we use the latest lastScrollY value
+    }, [lastScrollY]);
 
-    // Prefetch the Layout chunk to speed up navigation to /app
     const prefetchLayout = () => {
         import('../../pages/Layout.jsx');
     }
 
     const [theme, setTheme] = useTheme();
-    let clutter = 0;
 
     function handleChange() {
-        if (clutter == 0) {
-            setTheme((preve) => (preve === 'ligth' ? 'dark' : 'ligth'));
-        }
-        else {
-            setTheme(<img src={face} />);
-        }
+        setTheme((preve) => (preve === 'ligth' ? 'dark' : 'ligth'));
     }
 
     const logos = [
@@ -60,156 +49,338 @@ const Hero = () => {
         'https://i.pinimg.com/1200x/f4/22/30/f42230e621c19fea5815dde7a09ed83c.jpg',
     ];
 
-    // Tailwind classes for the smart navbar effect
     const navbarClasses = `
-        z-50 flex items-center justify-between w-full py-4 px-6 md:px-16 lg:px-24 xl:px-40 text-sm 
-        transition-all duration-300 ease-in-out 
-        fixed top-0 bg-white/60 backdrop-blur-sm shadow-md
-        ${showNavbar ? 'translate-y-0' : '-translate-y-full'}
+        z-50 flex items-center justify-between w-full py-4 px-6 md:px-16 lg:px-24 xl:px-40 text-sm
+        transition-all duration-500 ease-in-out
+        fixed top-0 backdrop-blur-xl shadow-lg
+        ${showNavbar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}
+        ${theme === 'ligth'
+            ? 'bg-white/80 border-b border-slate-200/50'
+            : 'bg-slate-900/80 border-b border-slate-700/50'}
     `;
 
     return (
-        <div>
-            <div id={theme} className="min-h-screen ">
-                {/* Navbar */}
-                {/* 🎯 Updated the class name to use the dynamic navbarClasses */}
-                <nav id={theme} className={`${navbarClasses} border-b `}>
-                    {
-                        theme === 'ligth' ? <div><img src={logo} alt="" /></div> : <div className="flex gap-1 text-center items-center justify-center">
-                            <h1 className="text-2xl font-semibold">resume</h1> <span className="bg-green-400 rounded-full mt-3 h-2 w-2"></span>
+        <div className={`min-h-screen ${theme === 'ligth' ? 'bg-gradient-to-br from-slate-50 via-white to-green-50' : 'bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800'}`}>
+            {/* Animated Background Elements */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-20 left-1/4 w-96 h-96 bg-green-400/20 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute top-40 right-1/4 w-80 h-80 bg-emerald-400/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute bottom-40 left-1/3 w-72 h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+            </div>
+
+            {/* Navbar */}
+            <nav className={navbarClasses}>
+                <Link to="/" className="flex items-center gap-2">
+                    {theme === 'ligth' ? (
+                        <img src={logo} alt="Resume Builder" className="h-10 w-auto" />
+                    ) : (
+                        <div className="flex items-center gap-1">
+                            <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">resume</span>
+                            <span className="bg-green-400 rounded-full h-2 w-2 mt-3"></span>
                         </div>
-                    }
+                    )}
+                </Link>
 
-                    <div id={theme} className="hidden md:flex items-center gap-8 transition duration-500 text-slate-800">
-                        <a href="#" className="hover:text-green-600 transition">Home</a>
-                        <a href="#features" className="hover:text-green-600 transition">Features</a>
-                        <a href="#testimonials" className="hover:text-green-600 transition">Testimonials</a>
-                        <a href="#cta" className="hover:text-green-600 transition">Contact</a>
-                    </div>
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex items-center gap-10">
+                    {[
+                        { name: 'Home', href: '#' },
+                        { name: 'Features', href: '#features' },
+                        { name: 'Reviews', href: '#testimonials' },
+                        { name: 'Contact', href: '#cta' }
+                    ].map((item) => (
+                        <a
+                            key={item.name}
+                            href={item.href}
+                            className={`relative text-sm font-medium transition-colors duration-300 group ${
+                                theme === 'ligth'
+                                    ? 'text-slate-600 hover:text-green-600'
+                                    : 'text-slate-300 hover:text-green-400'
+                            }`}
+                        >
+                            {item.name}
+                            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300 group-hover:w-full rounded-full`}></span>
+                        </a>
+                    ))}
+                </div>
 
-                    <div id={theme} className="flex gap-2">
-                        {user ? (
-                            // ✅ If logged in, show Dashboard button
-                            <Link to='/app?state=register' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="hidden md:block px-6 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
+                <div className="hidden md:flex items-center gap-4">
+                    {user ? (
+                        <Link
+                            to='/app'
+                            onMouseEnter={prefetchLayout}
+                            className="group relative px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium rounded-full shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300 overflow-hidden"
+                        >
+                            <span className="relative z-10 flex items-center gap-2">
                                 Dashboard
+                                <Sparkles className="w-4 h-4" />
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </Link>
+                    ) : (
+                        <>
+                            <Link
+                                to='/app?state=login'
+                                onMouseEnter={prefetchLayout}
+                                className={`px-5 py-2 font-medium rounded-full border-2 transition-all duration-300 ${
+                                    theme === 'ligth'
+                                        ? 'border-slate-300 text-slate-700 hover:border-green-500 hover:text-green-600'
+                                        : 'border-slate-600 text-slate-300 hover:border-green-500 hover:text-green-400'
+                                }`}
+                            >
+                                Login
                             </Link>
-                        ) : (
-                            // ✅ If not logged in, show Get Started + Login buttons
-                            <>
-                                <Link to='/app?state=register' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="hidden md:block px-6 py-2 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
-                                    Get started
-                                </Link>
-                                <Link id={theme} to='/app?state=login' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="hidden md:block px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900">
-                                    Login
-                                </Link>
-                            </>
-                        )}
-
-                    </div>
-                    <div onClick={handleChange} id={theme} className='cursor-pointer mr-4 md:mr-0'>
-                        {theme === 'ligth' ? (<IoSunnyOutline className="text-2xl" height={20} width={20} />) : (<RiMoonClearFill className="text-2xl" height={40} width={40} />)}
-                    </div>
-
-                     {
-                        user ? (
-                            <Link to='/app?state=register' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="md:hidden px-3 py-1 bg-green-500 hover:bg-green-700 active:scale-95 transition-all rounded-full text-white">
-                                Dashboard
+                            <Link
+                                to='/app?state=register'
+                                onMouseEnter={prefetchLayout}
+                                className="group relative px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium rounded-full shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300 overflow-hidden"
+                            >
+                                <span className="relative z-10 flex items-center gap-2">
+                                    Get Started
+                                    <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </span>
                             </Link>
-                        ):(
-                            <Link id={theme} to='/app?state=login' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className=" md:hidden px-6 py-2 border active:scale-95 hover:bg-slate-50 transition-all rounded-full text-slate-700 hover:text-slate-900">
-                                    Login
-                            </Link>
-                        )
-                     }
+                        </>
+                    )}
 
-                    <button onClick={() => setMenuOpen(true)} className="md:hidden active:scale-90 transition" >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" className="lucide lucide-menu" >
-                            <path d="M4 5h16M4 12h16M4 19h16" />
-                        </svg>
-                    </button>
-                </nav>
-
-                {/* To ensure the content doesn't jump, you need a spacer element 
-                    that is the same height as the fixed navbar. 
-                    Alternatively, add padding-top to the main content container. 
-                */}
-                <div id={theme} className="pt-20"></div> {/* Adjust this pt-XX to match your navbar's height */}
-
-                {/* Mobile Menu (No changes needed here) */}
-                <div id={theme} className={`fixed inset-0 z-[100] bg-green-500 text-black backdrop-blur flex flex-col items-center justify-center text-lg gap-8 md:hidden transition-transform duration-300 ${menuOpen ? "translate-x-0" : "-translate-x-full"}`} >
-                    <a onClick={() => setMenuOpen(false)} href="#" className="text-white">Home</a>
-                    <a onClick={() => setMenuOpen(false)} href="#features" className="text-white">Features</a>
-                    <a onClick={() => setMenuOpen(false)} href="#testimonials" className="text-white">Testimonials</a>
-                    <a onClick={() => setMenuOpen(false)} href="#contact" className="text-white">Contact</a>
-                    <button onClick={() => setMenuOpen(false)} className="active:ring-3 active:ring-white aspect-square size-10 p-1 items-center justify-center bg-green-600 hover:bg-green-700 transition text-white rounded-md flex" >
-                        X
+                    <button
+                        onClick={handleChange}
+                        className={`p-2.5 rounded-full transition-all duration-300 ${
+                            theme === 'ligth'
+                                ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                        }`}
+                    >
+                        {theme === 'ligth' ? <IoSunnyOutline className="text-xl" /> : <RiMoonClearFill className="text-xl" />}
                     </button>
                 </div>
 
-                {/* Hero Section */}
-                <div id={theme} className="relative flex flex-col items-center justify-center text-sm px-4 md:px-16 lg:px-24 xl:px-40 text-black">
-                    <div id={theme} className="absolute top-28 xl:top-10 -z-10 left-1/4 size-72 sm:size-96 xl:size-120 2xl:size-132 bg-green-300 blur-[100px] opacity-30"></div>
+                {/* Mobile Menu Button */}
+                <button
+                    onClick={() => setMenuOpen(true)}
+                    className={`md:hidden p-2 rounded-lg transition-colors ${
+                        theme === 'ligth' ? 'hover:bg-slate-100' : 'hover:bg-slate-800'
+                    }`}
+                >
+                    <Menu className="w-6 h-6" />
+                </button>
+            </nav>
 
-                    {/* Avatars + Stars */}
-                    <div className="flex items-center mt-24">
-                        <div className="flex -space-x-3 pr-3">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200" alt="user3" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[1]" />
-                            <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200" alt="user1" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-2" />
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200" alt="user2" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[3]" />
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200" alt="user3" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[4]" />
-                            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="user5" className="size-8 rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[5]" />
+            {/* Mobile Menu */}
+            <div className={`fixed inset-0 z-[100] transition-all duration-500 ${
+                menuOpen
+                    ? 'opacity-100 pointer-events-auto'
+                    : 'opacity-0 pointer-events-none'
+            }`}>
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMenuOpen(false)}></div>
+                <div className={`absolute right-0 top-0 h-full w-80 transform transition-transform duration-500 ${
+                    menuOpen ? 'translate-x-0' : 'translate-x-full'
+                } ${theme === 'ligth' ? 'bg-white' : 'bg-slate-900'}`}>
+                    <div className="p-6">
+                        <button
+                            onClick={() => setMenuOpen(false)}
+                            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+
+                        <div className="mt-12 space-y-4">
+                            {[
+                                { name: 'Home', href: '#' },
+                                { name: 'Features', href: '#features' },
+                                { name: 'Reviews', href: '#testimonials' },
+                                { name: 'Contact', href: '#cta' }
+                            ].map((item) => (
+                                <a
+                                    key={item.name}
+                                    href={item.href}
+                                    onClick={() => setMenuOpen(false)}
+                                    className={`block py-3 px-4 text-lg font-medium rounded-lg transition-colors ${
+                                        theme === 'ligth'
+                                            ? 'text-slate-700 hover:bg-green-50 hover:text-green-600'
+                                            : 'text-slate-300 hover:bg-slate-800 hover:text-green-400'
+                                    }`}
+                                >
+                                    {item.name}
+                                </a>
+                            ))}
                         </div>
 
-                        <div>
-                            <div className="flex ">
-                                {Array(5).fill(0).map((_, i) => (
-                                    <svg key={i} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-star text-transparent fill-green-600" aria-hidden="true"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path></svg>
-                                ))}
-                            </div>
-                            <p id={theme} className="text-sm text-gray-700">
-                                Used by 10,000+ users
-                            </p>
+                        <div className="mt-8 space-y-3">
+                            {user ? (
+                                <Link
+                                    to='/app'
+                                    className="block w-full py-3 text-center bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium rounded-full"
+                                >
+                                    Dashboard
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link
+                                        to='/app?state=login'
+                                        className={`block w-full py-3 text-center font-medium rounded-full border-2 ${
+                                            theme === 'ligth'
+                                                ? 'border-slate-300 text-slate-700'
+                                                : 'border-slate-600 text-slate-300'
+                                        }`}
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        to='/app?state=register'
+                                        className="block w-full py-3 text-center bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium rounded-full"
+                                    >
+                                        Get Started
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    {/* Headline + CTA */}
-                    <h1
-                        id={theme}
-                        className="text-5xl  flex flex-col md:text-6xl font-semibold max-w-5xl text-center mt-4 md:leading-[70px]"
-                    >
-                        Land Your Dream Job With{" "}
-                        <span className="bg-gradient-to-r from-green-700 to-green-600 bg-clip-text text-transparent whitespace-nowrap">
+            {/* Hero Section */}
+            <div className={`relative pt-32 pb-20 px-4 md:px-16 lg:px-24 xl:px-40 transition-all duration-1000 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}>
+                {/* Floating Badge */}
+                <div className="flex justify-center mb-8">
+                    <div className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 transition-all duration-300 hover:shadow-xl">
+                        <span className="flex h-2 w-2 relative">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Now with AI-powered resume analysis</span>
+                        <ChevronDown className="w-4 h-4 text-slate-500 group-hover:translate-y-1 transition-transform" />
+                    </div>
+                </div>
+
+                {/* Main Headline */}
+                <div className="text-center max-w-5xl mx-auto">
+                    <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight ${
+                        theme === 'ligth' ? 'text-slate-900' : 'text-white'
+                    }`}>
+                        <span className="block mb-2">Land Your Dream Job</span>
+                        <span className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
                             <ReactTyped
-                                className='text-3xl md:text-5xl font-semibold'
-                                strings={["AI-Powered Resume", "Smart Resume", "Next-Gen Resume"]}
-                                typeSpeed={60}
-                                backSpeed={40}
+                                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
+                                strings={["With AI-Powered Resume", "With Smart Templates", "With Professional Design"]}
+                                typeSpeed={50}
+                                backSpeed={30}
+                                backDelay={1500}
                                 loop
                             />
                         </span>
                     </h1>
 
-                    <p className="max-w-md text-center text-base my-7">Create edit Update and download Your resume with AI Powered assistant... </p>
+                    <p className={`mt-8 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed ${
+                        theme === 'ligth' ? 'text-slate-600' : 'text-slate-400'
+                    }`}>
+                        Create stunning, ATS-optimized resumes that help you stand out from the crowd and land your dream job faster.
+                    </p>
+                </div>
 
-                    {/* CTA Buttons */}
-                    <div className="flex items-center  gap-4 ">
-                        <Link to='/app' onMouseEnter={prefetchLayout} onFocus={prefetchLayout} className="bg-green-500 hover:bg-green-600 text-white rounded-full md:px-9 md:h-12 px-4 h-9 m-1 ring-offset-2 ring-1 ring-green-400 flex items-center transition-colors">
-                            Create Resume
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right ml-1 size-4" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                        </Link>
-                        <button id={theme} className="flex items-center gap-2 border border-slate-400 hover:bg-green-50 transition rounded-full md:px-7 m:h-12 px-4 h-10 text-slate-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-video size-5" aria-hidden="true"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
-                            <span>Try demo</span>
-                        </button>
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+                    <Link
+                        to='/app'
+                        onMouseEnter={prefetchLayout}
+                        className="group relative px-8 py-4 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 hover:from-green-600 hover:via-emerald-600 hover:to-green-600 text-white font-semibold rounded-full shadow-xl shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-500 overflow-hidden"
+                    >
+                        <span className="relative z-10 flex items-center justify-center gap-3">
+                            Create Your Resume
+                            <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </Link>
+
+                    <button className={`group flex items-center gap-3 px-8 py-4 font-semibold rounded-full border-2 transition-all duration-300 ${
+                        theme === 'ligth'
+                            ? 'border-slate-300 text-slate-700 hover:border-green-500 hover:text-green-600 hover:bg-green-50'
+                            : 'border-slate-600 text-slate-300 hover:border-green-500 hover:text-green-400 hover:bg-slate-800'
+                    }`}>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Watch Demo
+                    </button>
+                </div>
+
+                {/* Social Proof */}
+                <div className="flex flex-col items-center mt-16">
+                    <div className="flex items-center gap-4">
+                        <div className="flex -space-x-3">
+                            {[
+                                'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200',
+                                'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200',
+                                'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200',
+                                'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=200',
+                            ].map((src, i) => (
+                                <img
+                                    key={i}
+                                    src={src}
+                                    alt={`User ${i + 1}`}
+                                    className="w-10 h-10 rounded-full border-3 border-white dark:border-slate-900 object-cover shadow-lg hover:scale-110 hover:z-10 transition-all duration-300"
+                                />
+                            ))}
+                            <div className="w-10 h-10 rounded-full border-3 border-white dark:border-slate-900 bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-xs font-bold text-white shadow-lg">
+                                10K+
+                            </div>
+                        </div>
                     </div>
 
-                    <p id={theme} className="py-6 text-slate-600 mt-14">Trusting by leading brands, including</p>
+                    <div className="flex items-center gap-2 mt-4">
+                        <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                                <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                            ))}
+                        </div>
+                        <span className={`text-sm font-medium ${theme === 'ligth' ? 'text-slate-600' : 'text-slate-400'}`}>
+                            <strong className="text-slate-900 dark:text-white">4.9/5</strong> from 10,000+ users
+                        </span>
+                    </div>
+                </div>
 
-                    <div className="flex flex-wrap justify-between max-sm:justify-center gap-6 max-w-3xl w-full mx-auto py-4" id="logo-container">
-                        {logos.map((logo, index) => <img key={index} src={logo} alt="logo" className="md:h-10 rounded-full h-8 w-auto max-w-xs" />)}
+                {/* Trusted By Brands */}
+                <div className="mt-20">
+                    <p className={`text-center text-sm font-medium mb-8 ${theme === 'ligth' ? 'text-slate-500' : 'text-slate-500'}`}>
+                        Trusted by professionals from leading companies
+                    </p>
+                    <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+                        {logos.map((logo, index) => (
+                            <img
+                                key={index}
+                                src={logo}
+                                alt="Company logo"
+                                className="h-10 md:h-12 w-auto opacity-60 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0"
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
+
+            <style>{`
+                @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-20px); }
+                }
+                .animate-float {
+                    animation: float 6s ease-in-out infinite;
+                }
+                .delay-1000 {
+                    animation-delay: 1s;
+                }
+                .delay-500 {
+                    animation-delay: 0.5s;
+                }
+            `}</style>
         </div>
     );
 };
