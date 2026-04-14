@@ -388,3 +388,4 @@ const ExecutiveProTemplate = ({ data, accentColor = "#1e40af" }) => {
 };
 
 export default ExecutiveProTemplate;
+

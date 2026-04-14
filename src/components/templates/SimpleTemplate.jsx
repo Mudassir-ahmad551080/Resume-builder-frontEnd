@@ -1,9 +1,5 @@
 import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
-import { useTheme } from "../../context/ThemContext";
-
 const SimpleTemplate = ({ data, accentColor }) => {
-  const [theme] = useTheme();
-
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const [year, month] = dateStr.split("-");
@@ -14,18 +10,18 @@ const SimpleTemplate = ({ data, accentColor }) => {
   };
 
   return (
-    <div id={theme} className="max-w-4xl mx-auto bg-white text-zinc-200 p-12 min-h-screen">
+    <div className="max-w-4xl mx-auto bg-white text-zinc-200 p-12 min-h-screen">
       {/* Header Section */}
-      <header id={theme} className="text-center mb-8">
-        <h1 id={theme} className="text-4xl font-serif font-bold text-zinc-400 mb-2 uppercase tracking-tight">
+      <header className="text-center mb-8">
+        <h1 className="text-4xl font-serif font-bold text-zinc-400 mb-2 uppercase tracking-tight">
           {data.personal_info?.full_name || "Your Name"}
         </h1>
-        <p id={theme} className="text-lg font-medium mb-4" style={{ color: accentColor }}>
+        <p className="text-lg font-medium mb-4" style={{ color: accentColor }}>
           {data?.personal_info?.profession || "Profession"}
         </p>
 
         {/* Contact Info Bar */}
-        <div id={theme} className="flex flex-wrap justify-center gap-4 text-sm text-zinc-600">
+        <div className="flex flex-wrap justify-center gap-4 text-sm text-zinc-600">
           {data.personal_info?.phone && (
             <div className="flex items-center gap-1">
               <Phone size={14} />
@@ -67,11 +63,11 @@ const SimpleTemplate = ({ data, accentColor }) => {
 
       {/* Professional Summary */}
       {(data.professionalSummary || data.professional_summary) && (
-        <section id={theme} className="mb-8">
-          <h2 id={theme} className="text-sm font-bold uppercase tracking-widest mb-2" style={{ color: accentColor }}>
+        <section className="mb-8">
+          <h2 className="text-sm font-bold uppercase tracking-widest mb-2" style={{ color: accentColor }}>
             Professional Summary
           </h2>
-          <p id={theme} className="text-sm text-zinc-700 leading-relaxed">
+          <p className="text-sm text-zinc-700 leading-relaxed">
             {data.professionalSummary || data.professional_summary}
           </p>
         </section>
@@ -79,11 +75,11 @@ const SimpleTemplate = ({ data, accentColor }) => {
 
       {/* Experience Section */}
       {data.experience && data.experience.length > 0 && (
-        <section id={theme} className="mb-8">
-          <h2 id={theme} className="text-sm font-bold uppercase tracking-widest mb-4 border-b pb-1" style={{ borderColor: accentColor + '30', color: accentColor }}>
+        <section className="mb-8">
+          <h2 className="text-sm font-bold uppercase tracking-widest mb-4 border-b pb-1" style={{ borderColor: accentColor + '30', color: accentColor }}>
             Experience
           </h2>
-          <div id={theme} className="space-y-6">
+          <div className="space-y-6">
             {data.experience.map((exp, index) => (
               <div key={index}>
                 <div className="flex justify-between items-baseline">
@@ -108,11 +104,11 @@ const SimpleTemplate = ({ data, accentColor }) => {
 
       {/* Education Section */}
       {data.education && data.education.length > 0 && (
-        <section id={theme} className="mb-8">
-          <h2 id={theme} className="text-sm font-bold uppercase tracking-widest mb-4 border-b pb-1" style={{ borderColor: accentColor + '30', color: accentColor }}>
+        <section className="mb-8">
+          <h2 className="text-sm font-bold uppercase tracking-widest mb-4 border-b pb-1" style={{ borderColor: accentColor + '30', color: accentColor }}>
             Education
           </h2>
-          <div id={theme} className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {data.education.map((edu, index) => (
               <div key={index} className="flex justify-between items-baseline">
                 <div>
@@ -128,8 +124,8 @@ const SimpleTemplate = ({ data, accentColor }) => {
 
       {/* Skills Section */}
       {data.skills && data.skills.length > 0 && (
-        <section id={theme} className="mb-8">
-          <h2 id={theme} className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: accentColor }}>
+        <section className="mb-8">
+          <h2 className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: accentColor }}>
             Skills
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -144,8 +140,8 @@ const SimpleTemplate = ({ data, accentColor }) => {
 
       {/* Projects Section */}
       {data.projects && data.projects.length > 0 && (
-        <section id={theme}>
-          <h2 id={theme} className="text-sm font-bold uppercase tracking-widest mb-4 border-b pb-1" style={{ borderColor: accentColor + '30', color: accentColor }}>
+        <section>
+          <h2 className="text-sm font-bold uppercase tracking-widest mb-4 border-b pb-1" style={{ borderColor: accentColor + '30', color: accentColor }}>
             Projects
           </h2>
           <div className="space-y-4">
@@ -169,3 +165,4 @@ const SimpleTemplate = ({ data, accentColor }) => {
 };
 
 export default SimpleTemplate;
+

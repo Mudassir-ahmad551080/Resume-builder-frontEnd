@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
@@ -20,7 +20,6 @@ import {
   User,
 } from "lucide-react";
 import PersonalInfo from "../components/PersonalInfo";
-import { useTheme } from "../context/ThemContext";
 import ResumePreview from "../components/ResumePreview";
 import TemplateSelector from "../components/TemplateSelector";
 import ColorPicker from "../components/ColorPicker";
@@ -38,12 +37,11 @@ import toast from "react-hot-toast";
 const ResumeBuilder = () => {
   const { resumeId } = useParams();
   const [loading, setLoading] = useState(true);
-  const [theme] = useTheme();
   const [resumeData, setResumeData] = useState({
     _id: "",
     title: "",
     professional_summary: "",
-    personal_info: {}, // Γ£à fixed spelling
+    personal_info: {}, // G�� fixed spelling
     experience: [],
     education: [],
     projects: [],
@@ -197,42 +195,39 @@ const ResumeBuilder = () => {
 
 
   return (
-    <div id={theme} className="min-h-screen   bg-gray-50 text-gray-900">
+    <div className="min-h-screen   bg-gray-50 text-gray-900">
       {/* Header / Back Button */}
       <div
-        id={theme}
         className="sticky top-0 z-10 border-b border-gray-400 shadow-sm px-6 py-3 flex items-center gap-2"
       >
         <Link
           to="/app"
           className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-green-600 transition"
         >
-          <ArrowLeftIcon id={theme} className="size-4" />
-          <span id={theme} className="hover:text-green-500">
+          <ArrowLeftIcon className="size-4" />
+          <span className="hover:text-green-500">
             Back to Dashboard
           </span>
 
         </Link>
 
       </div>
-      <div id={theme} className="border border-l-0 border-r-0  flex gap-3 w-full text-black overflow-hidden">
+      <div className="border border-l-0 border-r-0  flex gap-3 w-full text-black overflow-hidden">
         <div className="animate-move-right w-full md:whitespace-nowrap md:[word-spacing:8px] tracking-wide">
           Please Click On Save Changes button to save your resume changes
         </div>
       </div>
 
       {/* Main Content */}
-      <div id={theme} className="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-12 gap-8">
           {/* Left Panel - Form */}
           <div
-            id={theme}
             className="lg:col-span-5 border  mt-10 border-gray-400 bg-white rounded-2xl shadow p-6 relative"
           >
-            <div id={theme} className="relative mb-6">
+            <div className="relative mb-6">
               {/* Progress Bar */}
               <hr
-                id={theme}
                 className="absolute top-0 h-1 rounded-full bg-transparent right-0 left-0 border border-gray-200"
               />
               <hr
@@ -377,9 +372,9 @@ const ResumeBuilder = () => {
           </div>
 
           {/* Right Panel - Resume Preview */}
-          <div id={theme} className="lg:col-span-7 max-lg:mt-6">
+          <div className="lg:col-span-7 max-lg:mt-6">
 
-            <div id={theme} className="relative md:justify-end mb-3 justify-center flex w-full">
+            <div className="relative md:justify-end mb-3 justify-center flex w-full">
               <div className="flex  md:mr-11 flex-wrap items-center gap-2 sm:gap-3">
                 {/* Share Button: Only shows if public */}
                 {resumeData.public && (
@@ -428,12 +423,12 @@ const ResumeBuilder = () => {
               currentResume={resumeData}
             />
 
-            <div id={theme} className="border border-l-0 border-r-0 flex gap-3 w-full text-black overflow-hidden">
+            <div className="border border-l-0 border-r-0 flex gap-3 w-full text-black overflow-hidden">
               {/* ... Warning Banner ... */}
             </div>
 
             {/* ... Main Content Grid ... */}
-            <div id={theme} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
               {/* ... Rest of your existing JSX ... */}
             </div>
           </div>
@@ -444,3 +439,4 @@ const ResumeBuilder = () => {
 };
 
 export default ResumeBuilder;
+

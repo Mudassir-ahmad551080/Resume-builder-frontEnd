@@ -14,11 +14,8 @@
 
 body{
   overflow-x: hidden;
-}
-#dark{
-    background-color: rgb(20, 7, 40);
-    transition: 0.5s all;
-    color: white;
+  background-color: #ffffff;
+  color: #0f172a;
 }
 
 #myimage{

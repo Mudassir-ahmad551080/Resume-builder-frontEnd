@@ -273,3 +273,4 @@ const ModerCardTemplate = ({ data, accentColor = "#10b981" }) => {
 };
 
 export default ModerCardTemplate;
+

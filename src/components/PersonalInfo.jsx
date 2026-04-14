@@ -1,10 +1,7 @@
-import { BriefcaseBusiness, Globe, Linkedin, Mail, MapPin, Phone, User, Upload, X } from 'lucide-react'
+﻿import { BriefcaseBusiness, Globe, Linkedin, Mail, MapPin, Phone, User, Upload, X } from 'lucide-react'
 import React, { useState } from 'react'
-import { useTheme } from '../context/ThemContext'
 
 const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) => {
-  const [theme] = useTheme();
-  const isLight = theme === 'ligth';
 
   const handleChange = (field, value) => {
     onchange({
@@ -28,12 +25,12 @@ const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) =
       {/* Header */}
       <div className="text-center">
         <h3 className={`text-2xl font-bold mb-2 ${
-          isLight ? 'text-slate-800' : 'text-white'
+          'text-slate-800'
         }`}>
           Personal Information
         </h3>
         <p className={`text-sm ${
-          isLight ? 'text-slate-500' : 'text-slate-400'
+          'text-slate-500'
         }`}>
           Get started with your personal information
         </p>
@@ -41,9 +38,7 @@ const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) =
 
       {/* Image Upload */}
       <div className={`flex flex-col items-center p-6 rounded-2xl transition-all duration-300 ${
-        isLight
-          ? 'bg-gradient-to-br from-slate-50 to-white border border-slate-200 hover:shadow-lg hover:shadow-slate-200/50'
-          : 'bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 hover:shadow-lg hover:shadow-slate-900/50'
+        'bg-gradient-to-br from-slate-50 to-white border border-slate-200 hover:shadow-lg hover:shadow-slate-200/50'
       }`}>
         <label className="flex flex-col items-center cursor-pointer group">
           {data.image ? (
@@ -71,15 +66,13 @@ const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) =
             </div>
           ) : (
             <div className={`flex flex-col items-center p-4 rounded-full transition-all duration-300 ${
-              isLight
-                ? 'bg-slate-100 group-hover:bg-slate-200'
-                : 'bg-slate-700 group-hover:bg-slate-600'
+              'bg-slate-100 group-hover:bg-slate-200'
             }`}>
-              <User className={`w-12 h-12 ${isLight ? 'text-slate-500' : 'text-slate-400'}`} />
+              <User className={`w-12 h-12 text-slate-500}`} />
             </div>
           )}
           <span className={`mt-3 text-sm font-medium ${
-            isLight ? 'text-slate-600' : 'text-slate-400'
+            'text-slate-600'
           } group-hover:text-green-600 transition-colors`}>
             {data.image ? 'Change Photo' : 'Upload Photo'}
           </span>
@@ -93,10 +86,10 @@ const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) =
 
         {typeof data.image === "object" && (
           <div className={`mt-4 flex items-center gap-3 p-3 rounded-xl ${
-            isLight ? 'bg-slate-100' : 'bg-slate-700'
+            'bg-slate-100'
           }`}>
             <span className={`text-sm font-medium ${
-              isLight ? 'text-slate-700' : 'text-slate-300'
+              'text-slate-700'
             }`}>
               Remove Background
             </span>
@@ -108,7 +101,7 @@ const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) =
                 checked={removeBackground}
               />
               <div className={`w-11 h-6 rounded-full peer-checked:bg-green-500 transition-all duration-200 ${
-                isLight ? 'bg-slate-300' : 'bg-slate-600'
+                'bg-slate-300'
               }`}></div>
               <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all duration-200 peer-checked:translate-x-5 shadow-md"></span>
             </label>
@@ -123,28 +116,24 @@ const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) =
           return (
             <div key={field.key} className="space-y-2">
               <label className={`flex items-center gap-2 text-sm font-semibold ${
-                isLight ? 'text-slate-700' : 'text-slate-300'
+                'text-slate-700'
               }`}>
                 <Icon className={`w-4 h-4 ${
-                  isLight ? 'text-green-600' : 'text-green-400'
+                  'text-green-600'
                 }`} />
                 {field.label}
                 {field.required && <span className="text-red-500">*</span>}
               </label>
 
               <div className={`relative rounded-xl transition-all duration-300 ${
-                isLight
-                  ? 'bg-slate-50 border border-slate-200 focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20'
-                  : 'bg-slate-800 border border-slate-700 focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20'
+                'bg-slate-50 border border-slate-200 focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20'
               }`}>
                 <input
                   type={field.type}
                   value={data[field.key] || ''}
                   onChange={(e) => handleChange(field.key, e.target.value)}
                   className={`w-full px-4 py-3 rounded-xl bg-transparent outline-none transition-all duration-300 ${
-                    isLight
-                      ? 'text-slate-800 placeholder-slate-400'
-                      : 'text-white placeholder-slate-500'
+                    'text-slate-800 placeholder-slate-400'
                   }`}
                   placeholder={`Enter your ${field.label.toLowerCase()}`}
                   required={field.required}
@@ -159,3 +148,5 @@ const PersonalInfo = ({data, onchange, removeBackground, setRemoveBackground}) =
 }
 
 export default PersonalInfo
+
+

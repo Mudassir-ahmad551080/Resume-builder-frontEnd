@@ -1,9 +1,5 @@
 import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
-import { useTheme } from "../../context/ThemContext";
-
 const ModernTemplate = ({ data, accentColor }) => {
-  const [theme] = useTheme();
-
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const [year, month] = dateStr.split("-");
@@ -20,7 +16,7 @@ const ModernTemplate = ({ data, accentColor }) => {
     const items = content.split("\n").filter((item) => item.trim() !== "");
 
     return (
-      <ul id={theme} className="list-disc pl-5 space-y-1 text-gray-700 leading-relaxed">
+      <ul className="list-disc pl-5 space-y-1 text-gray-700 leading-relaxed">
         {items.map((item, index) => (
           <li key={index}>{item}</li>
         ))}
@@ -29,10 +25,9 @@ const ModernTemplate = ({ data, accentColor }) => {
   };
 
   return (
-    <div id={theme} className="max-w-4xl mx-auto bg-white text-gray-800">
+    <div className="max-w-4xl mx-auto bg-white text-gray-800">
       {/* Header */}
       <header
-        id={theme}
         className="p-8 text-white"
         style={{ backgroundColor: accentColor }}
       >
@@ -97,16 +92,15 @@ const ModernTemplate = ({ data, accentColor }) => {
       <div className="p-8">
         {/* Professional Summary */}
         {(data.professionalSummary || data.professional_summary) && (
-          <section id={theme} className="mb-6">
+          <section className="mb-6">
             <h2
-              id={theme}
               className="text-xl font-semibold mb-3"
               style={{ color: accentColor }}
             >
               PROFESSIONAL SUMMARY
             </h2>
             {/* Updated to use bullet points helper */}
-            <div id={theme}>
+            <div>
               {renderDescription(
                 data.professionalSummary || data.professional_summary
               )}
@@ -116,34 +110,29 @@ const ModernTemplate = ({ data, accentColor }) => {
 
         {/* Experience */}
         {data.experience && data.experience.length > 0 && (
-          <section id={theme} className="mb-8">
+          <section className="mb-8">
             <h2
-              id={theme}
               className="text-2xl font-light mb-6 pb-2 border-b border-gray-200"
             >
               Experience
             </h2>
 
-            <div id={theme} className="space-y-6">
+            <div className="space-y-6">
               {data.experience.map((exp, index) => (
                 <div
-                  id={theme}
                   key={index}
                   className="relative pl-6 border-l border-gray-200"
                 >
                   <div
-                    id={theme}
                     className="flex justify-between items-start mb-2"
                   >
-                    <div id={theme}>
+                    <div>
                       <h3
-                        id={theme}
                         className="text-xl font-medium text-gray-900"
                       >
                         {exp.position}
                       </h3>
                       <p
-                        id={theme}
                         className="font-medium"
                         style={{ color: accentColor }}
                       >
@@ -151,7 +140,6 @@ const ModernTemplate = ({ data, accentColor }) => {
                       </p>
                     </div>
                     <div
-                      id={theme}
                       className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded"
                     >
                       {formatDate(exp.start_date)} -{" "}
@@ -162,7 +150,7 @@ const ModernTemplate = ({ data, accentColor }) => {
                   </div>
                   {/* Updated to use bullet points helper */}
                   {exp.description && (
-                    <div id={theme} className="mt-2">
+                    <div className="mt-2">
                       {renderDescription(exp.description)}
                     </div>
                   )}
@@ -174,32 +162,28 @@ const ModernTemplate = ({ data, accentColor }) => {
 
         {/* Projects */}
         {data.projects && data.projects.length > 0 && (
-          <section id={theme} className="mb-8">
+          <section className="mb-8">
             <h2
-              id={theme}
               className="text-2xl font-light mb-4 pb-2 border-b border-gray-200"
             >
               Projects
             </h2>
 
-            <div id={theme} className="space-y-6">
+            <div className="space-y-6">
               {data.projects.map((p, index) => (
                 <div
-                  id={theme}
                   key={index}
                   className="relative pl-6 border-l border-gray-200"
                   style={{ borderLeftColor: accentColor }}
                 >
-                  <div id={theme} className="flex justify-between items-start">
-                    <div id={theme}>
+                  <div className="flex justify-between items-start">
+                    <div>
                       <h3
-                        id={theme}
                         className="text-lg font-medium text-gray-900"
                       >
                         {p.name}
                       </h3>
                       <h3
-                        id={theme}
                         className="text-lg font-medium"
                         style={{ color: accentColor }}
                       >
@@ -207,7 +191,6 @@ const ModernTemplate = ({ data, accentColor }) => {
                       </h3>
                        <div className="flex gap-5 text-center items-center ">
                         <a
-                        id={theme}
                         href={p.link}
                         target="_blank"
                         rel="noreferrer"
@@ -217,7 +200,6 @@ const ModernTemplate = ({ data, accentColor }) => {
                         {p.link}
                       </a>
                       <a
-                        id={theme}
                         href={p.code_link}
                         target="_blank"
                         rel="noreferrer"
@@ -231,7 +213,7 @@ const ModernTemplate = ({ data, accentColor }) => {
                   </div>
                   {/* Updated to use bullet points helper */}
                   {p.description && (
-                    <div id={theme} className="mt-2 text-sm">
+                    <div className="mt-2 text-sm">
                       {renderDescription(p.description)}
                     </div>
                   )}
@@ -241,34 +223,32 @@ const ModernTemplate = ({ data, accentColor }) => {
           </section>
         )}
 
-        <div id={theme} className="grid sm:grid-cols-2 gap-8">
+        <div className="grid sm:grid-cols-2 gap-8">
           {/* Education */}
           {data.education && data.education.length > 0 && (
-            <section id={theme}>
+            <section>
               <h2
-                id={theme}
                 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200"
               >
                 Education
               </h2>
 
-              <div id={theme} className="space-y-4">
+              <div className="space-y-4">
                 {data.education.map((edu, index) => (
-                  <div id={theme} key={index}>
-                    <h3 id={theme} className="font-semibold text-gray-900">
+                  <div key={index}>
+                    <h3 className="font-semibold text-gray-900">
                       {edu.degree} {edu.field && `in ${edu.field}`}
                     </h3>
-                    <p id={theme} style={{ color: accentColor }}>
+                    <p style={{ color: accentColor }}>
                       {edu.institute}
                     </p>
                     <div
-                      id={theme}
                       className="flex justify-between items-center text-sm text-gray-600"
                     >
-                      <span id={theme}>{formatDate(edu.graduation_date)}</span>
-                      {edu.gpa && <span id={theme}>GPA: {edu.gpa}</span>}
+                      <span>{formatDate(edu.graduation_date)}</span>
+                      {edu.gpa && <span>GPA: {edu.gpa}</span>}
                       {edu.marks && (
-                        <p id={theme} className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600">
                           Marks: {edu.marks}
                         </p>
                       )}
@@ -281,18 +261,16 @@ const ModernTemplate = ({ data, accentColor }) => {
 
           {/* Skills */}
           {data.skills && data.skills.length > 0 && (
-            <section id={theme}>
+            <section>
               <h2
-                id={theme}
                 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200"
               >
                 Skills
               </h2>
 
-              <div id={theme} className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
                 {data.skills.map((skill, index) => (
                   <span
-                    id={theme}
                     key={index}
                     className="px-3 py-1 text-sm text-white rounded-full"
                     style={{ backgroundColor: accentColor }}
@@ -310,3 +288,4 @@ const ModernTemplate = ({ data, accentColor }) => {
 };
 
 export default ModernTemplate;
+

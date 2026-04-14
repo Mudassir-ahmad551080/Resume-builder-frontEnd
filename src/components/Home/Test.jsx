@@ -1,12 +1,9 @@
 import React from 'react'
 import mudassir from '../../image/mudassir.png'
 import ilyas from '../../image/ilyas.png'
-import { useTheme } from '../../context/ThemContext'
 import { Star, Quote } from 'lucide-react'
 
 const Test = () => {
-    const [theme] = useTheme();
-
     const cardsData = [
         {
             image: mudassir,
@@ -44,13 +41,11 @@ const Test = () => {
 
     const CreateCard = ({ card }) => (
         <div className={`group relative p-6 rounded-2xl mx-4 shrink-0 transition-all duration-500 hover:scale-[1.02] ${
-            theme === 'ligth'
-                ? 'bg-white shadow-lg hover:shadow-xl border border-slate-200'
-                : 'bg-slate-800/80 hover:shadow-xl border border-slate-700'
+            'bg-white shadow-lg hover:shadow-xl border border-slate-200'
         }`}>
             {/* Quote Icon */}
             <div className={`absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity ${
-                theme === 'ligth' ? 'text-green-600' : 'text-green-400'
+                'text-green-600'
             }`}>
                 <Quote className="w-8 h-8" />
             </div>
@@ -64,7 +59,7 @@ const Test = () => {
 
             {/* Text */}
             <p className={`text-sm leading-relaxed mb-6 ${
-                theme === 'ligth' ? 'text-slate-600' : 'text-slate-400'
+                'text-slate-600'
             }`}>
                 "{card.text}"
             </p>
@@ -84,10 +79,10 @@ const Test = () => {
                     </div>
                 </div>
                 <div>
-                    <p className={`font-semibold ${theme === 'ligth' ? 'text-slate-800' : 'text-white'}`}>
+                    <p className={`font-semibold ${'text-slate-800'}`}>
                         {card.name}
                     </p>
-                    <p className={`text-xs ${theme === 'ligth' ? 'text-slate-500' : 'text-slate-500'}`}>
+                    <p className={`text-xs ${'text-slate-500'}`}>
                         {card.role}
                     </p>
                 </div>
@@ -141,3 +136,6 @@ const Test = () => {
 }
 
 export default Test
+
+
+

@@ -1,13 +1,10 @@
-import { Briefcase, Plus, Sparkles, Trash2, Loader2, Calendar, Building2, User } from "lucide-react";
+﻿import { Briefcase, Plus, Sparkles, Trash2, Loader2, Calendar, Building2, User } from "lucide-react";
 import React, { useState } from 'react';
-import { useTheme } from "../context/ThemContext";
 import { useSelector } from 'react-redux';
 import api from '../config/api';
 import toast from 'react-hot-toast';
 
 const ExperienceForm = ({ data, onChange }) => {
-  const [theme] = useTheme();
-  const isLight = theme === 'ligth';
   const { token } = useSelector((state) => state.auth);
   const [loadingIndex, setLoadingIndex] = useState(null);
 
@@ -64,12 +61,12 @@ const ExperienceForm = ({ data, onChange }) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div>
           <h3 className={`text-xl font-bold flex items-center gap-2 ${
-            isLight ? 'text-slate-800' : 'text-white'
+            'text-slate-800'
           }`}>
-            <Briefcase className={`w-5 h-5 ${isLight ? 'text-green-600' : 'text-green-400'}`} />
+            <Briefcase className={`w-5 h-5 text-green-600}`} />
             Professional Experience
           </h3>
-          <p className={`text-sm mt-1 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+          <p className={`text-sm mt-1 text-slate-500}`}>
             Detail your career history to showcase your expertise.
           </p>
         </div>
@@ -86,23 +83,21 @@ const ExperienceForm = ({ data, onChange }) => {
       {/* Empty State */}
       {data.length === 0 ? (
         <div className={`flex flex-col items-center justify-center py-12 px-4 rounded-2xl border-2 border-dashed transition-colors ${
-          isLight
-            ? 'border-slate-200 bg-slate-50/50 hover:bg-slate-50'
-            : 'border-slate-700 bg-slate-800/50 hover:bg-slate-800'
+          'border-slate-200 bg-slate-50/50 hover:bg-slate-50'
         }`}>
           <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
-            isLight ? 'bg-slate-200' : 'bg-slate-700'
+            'bg-slate-200'
           }`}>
-            <Briefcase className={`w-8 h-8 ${isLight ? 'text-slate-400' : 'text-slate-500'}`} />
+            <Briefcase className={`w-8 h-8 text-slate-400}`} />
           </div>
-          <h4 className={`text-lg font-medium ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>No experience added yet</h4>
-          <p className={`text-sm text-center max-w-sm mb-6 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+          <h4 className={`text-lg font-medium text-slate-700}`}>No experience added yet</h4>
+          <p className={`text-sm text-center max-w-sm mb-6 text-slate-500}`}>
             Start building your resume by adding your past work experience, internships, or freelance projects.
           </p>
           <button
             onClick={addExperience}
             className={`font-medium flex items-center gap-1 ${
-              isLight ? 'text-green-600 hover:text-green-700' : 'text-green-400 hover:text-green-500'
+              'text-green-600 hover:text-green-700'
             }`}
           >
             Click here to add your first job
@@ -114,23 +109,19 @@ const ExperienceForm = ({ data, onChange }) => {
             <div
               key={index}
               className={`rounded-2xl shadow-lg transition-all duration-300 p-6 ${
-                isLight
-                  ? 'bg-white border border-slate-200 hover:shadow-xl'
-                  : 'bg-slate-800/80 border border-slate-700 hover:shadow-xl hover:shadow-slate-900/50'
+                'bg-white border border-slate-200 hover:shadow-xl'
               }`}
             >
               {/* Card Header & Delete */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <span className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
-                    isLight
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
-                      : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                    'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
                   }`}>
                     {index + 1}
                   </span>
                   <h4 className={`text-lg font-semibold ${
-                    isLight ? 'text-slate-800' : 'text-white'
+                    'text-slate-800'
                   }`}>
                     {experience.position || "Untitled Position"}
                   </h4>
@@ -139,9 +130,7 @@ const ExperienceForm = ({ data, onChange }) => {
                   type="button"
                   onClick={() => removeExperience(index)}
                   className={`p-2 rounded-full transition-colors ${
-                    isLight
-                      ? 'text-slate-400 hover:text-red-500 hover:bg-red-50'
-                      : 'text-slate-500 hover:text-red-400 hover:bg-red-500/10'
+                    'text-slate-400 hover:text-red-500 hover:bg-red-50'
                   }`}
                 >
                   <Trash2 size={18} />
@@ -153,7 +142,7 @@ const ExperienceForm = ({ data, onChange }) => {
                 {/* Position Title */}
                 <div className="space-y-2">
                   <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
-                    isLight ? 'text-slate-500' : 'text-slate-400'
+                    'text-slate-500'
                   }`}>
                     <User size={12} /> Job Title
                   </label>
@@ -161,9 +150,7 @@ const ExperienceForm = ({ data, onChange }) => {
                     type="text"
                     placeholder="e.g. Senior Software Engineer"
                     className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
-                      isLight
-                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                      'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
                     }`}
                     value={experience.position || ""}
                     onChange={(e) => updateExperience(index, "position", e.target.value)}
@@ -173,7 +160,7 @@ const ExperienceForm = ({ data, onChange }) => {
                 {/* Company Name */}
                 <div className="space-y-2">
                   <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
-                    isLight ? 'text-slate-500' : 'text-slate-400'
+                    'text-slate-500'
                   }`}>
                     <Building2 size={12} /> Employer
                   </label>
@@ -181,9 +168,7 @@ const ExperienceForm = ({ data, onChange }) => {
                     type="text"
                     placeholder="e.g. Google Inc."
                     className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
-                      isLight
-                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                      'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
                     }`}
                     value={experience.company || ""}
                     onChange={(e) => updateExperience(index, "company", e.target.value)}
@@ -193,16 +178,14 @@ const ExperienceForm = ({ data, onChange }) => {
                 {/* Start Date */}
                 <div className="space-y-2">
                   <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
-                    isLight ? 'text-slate-500' : 'text-slate-400'
+                    'text-slate-500'
                   }`}>
                     <Calendar size={12} /> Start Date
                   </label>
                   <input
                     type="month"
                     className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
-                      isLight
-                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800'
-                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white'
+                      'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800'
                     }`}
                     value={experience.start_date || ""}
                     onChange={(e) => updateExperience(index, "start_date", e.target.value)}
@@ -212,7 +195,7 @@ const ExperienceForm = ({ data, onChange }) => {
                 {/* End Date */}
                 <div className="space-y-2">
                   <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
-                    isLight ? 'text-slate-500' : 'text-slate-400'
+                    'text-slate-500'
                   }`}>
                     <Calendar size={12} /> End Date
                   </label>
@@ -220,10 +203,8 @@ const ExperienceForm = ({ data, onChange }) => {
                     type="month"
                     className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all ${
                       experience.is_current
-                        ? `${isLight ? 'bg-slate-100' : 'bg-slate-800'} ${isLight ? 'border-slate-200' : 'border-slate-700'} ${isLight ? 'text-slate-400' : 'text-slate-500'} cursor-not-allowed`
-                        : isLight
-                          ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800'
-                          : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white'
+                        ? `bg-slate-100} border-slate-200} text-slate-400} cursor-not-allowed`
+                        : 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800'
                     }`}
                     disabled={experience.is_current}
                     value={experience.end_date || ""}
@@ -237,13 +218,13 @@ const ExperienceForm = ({ data, onChange }) => {
                 <input
                   type="checkbox"
                   className={`w-5 h-5 rounded transition-colors ${
-                    isLight ? 'text-green-600 border-slate-300' : 'text-green-400 border-slate-600'
+                    'text-green-600 border-slate-300'
                   }`}
                   checked={experience.is_current || false}
                   onChange={(e) => updateExperience(index, 'is_current', e.target.checked)}
                 />
                 <label className={`text-sm cursor-pointer ${
-                  isLight ? 'text-slate-700' : 'text-slate-300'
+                  'text-slate-700'
                 }`}>
                   I am currently working here
                 </label>
@@ -251,11 +232,11 @@ const ExperienceForm = ({ data, onChange }) => {
 
               {/* Description Section with AI */}
               <div className={`rounded-xl p-4 ${
-                isLight ? 'bg-slate-50 border border-slate-200' : 'bg-slate-900/50 border border-slate-700'
+                'bg-slate-50 border border-slate-200'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <label className={`text-sm font-semibold ${
-                    isLight ? 'text-slate-700' : 'text-slate-300'
+                    'text-slate-700'
                   }`}>
                     Responsibilities & Achievements
                   </label>
@@ -284,14 +265,12 @@ const ExperienceForm = ({ data, onChange }) => {
                   value={experience.description || ''}
                   onChange={(e) => updateExperience(index, 'description', e.target.value)}
                   className={`w-full p-3 text-sm rounded-xl outline-none transition-all resize-y min-h-[100px] ${
-                    isLight
-                      ? 'bg-white border border-slate-200 text-slate-700 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20'
-                      : 'bg-slate-900 border border-slate-700 text-slate-300 placeholder-slate-500 focus:border-green-500 focus:ring-2 focus:ring-green-500/20'
+                    'bg-white border border-slate-200 text-slate-700 placeholder-slate-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20'
                   }`}
-                  placeholder="• Developed new features for the frontend using React...\n• Collaborated with backend team to optimize API endpoints..."
+                  placeholder="â€¢ Developed new features for the frontend using React...\nâ€¢ Collaborated with backend team to optimize API endpoints..."
                 />
                 <p className={`text-xs mt-2 flex items-center gap-1 ${
-                  isLight ? 'text-slate-500' : 'text-slate-400'
+                  'text-slate-500'
                 }`}>
                   <Sparkles className="w-3 h-3 text-yellow-500" />
                   Tip: Write a rough draft, then let AI polish it for you.
@@ -306,3 +285,5 @@ const ExperienceForm = ({ data, onChange }) => {
 };
 
 export default ExperienceForm;
+
+

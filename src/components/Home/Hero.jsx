@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from '../../context/ThemContext';
-import { RiMoonClearFill } from "react-icons/ri";
-import { IoSunnyOutline } from "react-icons/io5";
 import logo from '../../../public/logo.svg';
 import { ReactTyped } from "react-typed";
 import { useSelector } from 'react-redux';
@@ -36,12 +33,6 @@ const Hero = () => {
         import('../../pages/Layout.jsx');
     }
 
-    const [theme, setTheme] = useTheme();
-
-    function handleChange() {
-        setTheme((preve) => (preve === 'ligth' ? 'dark' : 'ligth'));
-    }
-
     const logos = [
         'https://i.pinimg.com/736x/9e/ab/c5/9eabc54fbe3cd7a6931695dcce52cc82.jpg',
         'https://i.pinimg.com/736x/fa/76/9b/fa769ba2fd25c9bdd269a736e0942218.jpg',
@@ -54,13 +45,11 @@ const Hero = () => {
         transition-all duration-500 ease-in-out
         fixed top-0 backdrop-blur-xl shadow-lg
         ${showNavbar ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}
-        ${theme === 'ligth'
-            ? 'bg-white/80 border-b border-slate-200/50'
-            : 'bg-slate-900/80 border-b border-slate-700/50'}
+        bg-white/80 border-b border-slate-200/50
     `;
 
     return (
-        <div className={`min-h-screen ${theme === 'ligth' ? 'bg-gradient-to-br from-slate-50 via-white to-green-50' : 'bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800'}`}>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-green-50">
             {/* Animated Background Elements */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 left-1/4 w-96 h-96 bg-green-400/20 rounded-full blur-3xl animate-pulse"></div>
@@ -71,14 +60,7 @@ const Hero = () => {
             {/* Navbar */}
             <nav className={navbarClasses}>
                 <Link to="/" className="flex items-center gap-2">
-                    {theme === 'ligth' ? (
-                        <img src={logo} alt="Resume Builder" className="h-10 w-auto" />
-                    ) : (
-                        <div className="flex items-center gap-1">
-                            <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">resume</span>
-                            <span className="bg-green-400 rounded-full h-2 w-2 mt-3"></span>
-                        </div>
-                    )}
+                    <img src={logo} alt="Resume Builder" className="h-10 w-auto" />
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -92,14 +74,10 @@ const Hero = () => {
                         <a
                             key={item.name}
                             href={item.href}
-                            className={`relative text-sm font-medium transition-colors duration-300 group ${
-                                theme === 'ligth'
-                                    ? 'text-slate-600 hover:text-green-600'
-                                    : 'text-slate-300 hover:text-green-400'
-                            }`}
+                            className="relative text-sm font-medium transition-colors duration-300 group text-slate-600 hover:text-green-600"
                         >
                             {item.name}
-                            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300 group-hover:w-full rounded-full`}></span>
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300 group-hover:w-full rounded-full"></span>
                         </a>
                     ))}
                 </div>
@@ -122,11 +100,7 @@ const Hero = () => {
                             <Link
                                 to='/app?state=login'
                                 onMouseEnter={prefetchLayout}
-                                className={`px-5 py-2 font-medium rounded-full border-2 transition-all duration-300 ${
-                                    theme === 'ligth'
-                                        ? 'border-slate-300 text-slate-700 hover:border-green-500 hover:text-green-600'
-                                        : 'border-slate-600 text-slate-300 hover:border-green-500 hover:text-green-400'
-                                }`}
+                                className="px-5 py-2 font-medium rounded-full border-2 transition-all duration-300 border-slate-300 text-slate-700 hover:border-green-500 hover:text-green-600"
                             >
                                 Login
                             </Link>
@@ -144,25 +118,12 @@ const Hero = () => {
                             </Link>
                         </>
                     )}
-
-                    <button
-                        onClick={handleChange}
-                        className={`p-2.5 rounded-full transition-all duration-300 ${
-                            theme === 'ligth'
-                                ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
-                        }`}
-                    >
-                        {theme === 'ligth' ? <IoSunnyOutline className="text-xl" /> : <RiMoonClearFill className="text-xl" />}
-                    </button>
                 </div>
 
                 {/* Mobile Menu Button */}
                 <button
                     onClick={() => setMenuOpen(true)}
-                    className={`md:hidden p-2 rounded-lg transition-colors ${
-                        theme === 'ligth' ? 'hover:bg-slate-100' : 'hover:bg-slate-800'
-                    }`}
+                    className="md:hidden p-2 rounded-lg transition-colors hover:bg-slate-100"
                 >
                     <Menu className="w-6 h-6" />
                 </button>
@@ -177,11 +138,11 @@ const Hero = () => {
                 <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMenuOpen(false)}></div>
                 <div className={`absolute right-0 top-0 h-full w-80 transform transition-transform duration-500 ${
                     menuOpen ? 'translate-x-0' : 'translate-x-full'
-                } ${theme === 'ligth' ? 'bg-white' : 'bg-slate-900'}`}>
+                } bg-white`}>
                     <div className="p-6">
                         <button
                             onClick={() => setMenuOpen(false)}
-                            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-100"
                         >
                             <X className="w-6 h-6" />
                         </button>
@@ -197,11 +158,7 @@ const Hero = () => {
                                     key={item.name}
                                     href={item.href}
                                     onClick={() => setMenuOpen(false)}
-                                    className={`block py-3 px-4 text-lg font-medium rounded-lg transition-colors ${
-                                        theme === 'ligth'
-                                            ? 'text-slate-700 hover:bg-green-50 hover:text-green-600'
-                                            : 'text-slate-300 hover:bg-slate-800 hover:text-green-400'
-                                    }`}
+                                    className="block py-3 px-4 text-lg font-medium rounded-lg transition-colors text-slate-700 hover:bg-green-50 hover:text-green-600"
                                 >
                                     {item.name}
                                 </a>
@@ -220,11 +177,7 @@ const Hero = () => {
                                 <>
                                     <Link
                                         to='/app?state=login'
-                                        className={`block w-full py-3 text-center font-medium rounded-full border-2 ${
-                                            theme === 'ligth'
-                                                ? 'border-slate-300 text-slate-700'
-                                                : 'border-slate-600 text-slate-300'
-                                        }`}
+                                        className="block w-full py-3 text-center font-medium rounded-full border-2 border-slate-300 text-slate-700"
                                     >
                                         Login
                                     </Link>
@@ -247,21 +200,19 @@ const Hero = () => {
             }`}>
                 {/* Floating Badge */}
                 <div className="flex justify-center mb-8">
-                    <div className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 transition-all duration-300 hover:shadow-xl">
+                    <div className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200/50 shadow-lg shadow-slate-200/50 transition-all duration-300 hover:shadow-xl">
                         <span className="flex h-2 w-2 relative">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                         </span>
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Now with AI-powered resume analysis</span>
+                        <span className="text-sm font-medium text-slate-700">Now with AI-powered resume analysis</span>
                         <ChevronDown className="w-4 h-4 text-slate-500 group-hover:translate-y-1 transition-transform" />
                     </div>
                 </div>
 
                 {/* Main Headline */}
                 <div className="text-center max-w-5xl mx-auto">
-                    <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight ${
-                        theme === 'ligth' ? 'text-slate-900' : 'text-white'
-                    }`}>
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900">
                         <span className="block mb-2">Land Your Dream Job</span>
                         <span className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
                             <ReactTyped
@@ -275,9 +226,7 @@ const Hero = () => {
                         </span>
                     </h1>
 
-                    <p className={`mt-8 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed ${
-                        theme === 'ligth' ? 'text-slate-600' : 'text-slate-400'
-                    }`}>
+                    <p className="mt-8 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-slate-600">
                         Create stunning, ATS-optimized resumes that help you stand out from the crowd and land your dream job faster.
                     </p>
                 </div>
@@ -298,11 +247,7 @@ const Hero = () => {
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </Link>
 
-                    <button className={`group flex items-center gap-3 px-8 py-4 font-semibold rounded-full border-2 transition-all duration-300 ${
-                        theme === 'ligth'
-                            ? 'border-slate-300 text-slate-700 hover:border-green-500 hover:text-green-600 hover:bg-green-50'
-                            : 'border-slate-600 text-slate-300 hover:border-green-500 hover:text-green-400 hover:bg-slate-800'
-                    }`}>
+                    <button className="group flex items-center gap-3 px-8 py-4 font-semibold rounded-full border-2 transition-all duration-300 border-slate-300 text-slate-700 hover:border-green-500 hover:text-green-600 hover:bg-green-50">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -325,10 +270,10 @@ const Hero = () => {
                                     key={i}
                                     src={src}
                                     alt={`User ${i + 1}`}
-                                    className="w-10 h-10 rounded-full border-3 border-white dark:border-slate-900 object-cover shadow-lg hover:scale-110 hover:z-10 transition-all duration-300"
+                                    className="w-10 h-10 rounded-full border-3 border-white object-cover shadow-lg hover:scale-110 hover:z-10 transition-all duration-300"
                                 />
                             ))}
-                            <div className="w-10 h-10 rounded-full border-3 border-white dark:border-slate-900 bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-xs font-bold text-white shadow-lg">
+                            <div className="w-10 h-10 rounded-full border-3 border-white bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-xs font-bold text-white shadow-lg">
                                 10K+
                             </div>
                         </div>
@@ -342,15 +287,15 @@ const Hero = () => {
                                 </svg>
                             ))}
                         </div>
-                        <span className={`text-sm font-medium ${theme === 'ligth' ? 'text-slate-600' : 'text-slate-400'}`}>
-                            <strong className="text-slate-900 dark:text-white">4.9/5</strong> from 10,000+ users
+                        <span className="text-sm font-medium text-slate-600">
+                            <strong className="text-slate-900">4.9/5</strong> from 10,000+ users
                         </span>
                     </div>
                 </div>
 
                 {/* Trusted By Brands */}
                 <div className="mt-20">
-                    <p className={`text-center text-sm font-medium mb-8 ${theme === 'ligth' ? 'text-slate-500' : 'text-slate-500'}`}>
+                    <p className="text-center text-sm font-medium mb-8 text-slate-500">
                         Trusted by professionals from leading companies
                     </p>
                     <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">

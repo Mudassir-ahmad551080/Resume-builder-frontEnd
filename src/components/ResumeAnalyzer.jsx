@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useTheme } from "../context/ThemContext.jsx";
 import { FileText, ArrowLeft, UploadCloud, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
 
 const API_URL = `${import.meta.env.VITE_BASE_URL}/api/ai/analyze-resume`;
@@ -15,7 +14,7 @@ const ScoreRing = ({ score, isDark }) => {
   return (
     <div className="relative w-36 h-36">
       <svg width="140" height="140" className="transform -rotate-90">
-        <circle cx="70" cy="70" r={radius} fill="none" stroke={isDark ? "#1e1e2e" : "#e2e8f0"} strokeWidth="10" />
+        <circle cx="70" cy="70" r={radius} fill="none" stroke={"#e2e8f0"} strokeWidth="10" />
         <circle
           cx="70" cy="70" r={radius} fill="none"
           stroke={color} strokeWidth="10"
@@ -28,7 +27,7 @@ const ScoreRing = ({ score, isDark }) => {
         <span className="text-4xl font-extrabold" style={{ color, lineHeight: 1 }}>
           {score}
         </span>
-        <span className={`text-xs tracking-widest uppercase mt-1 ${isDark ? "text-gray-500" : "text-gray-400"}`}>
+        <span className={`text-xs tracking-widest uppercase mt-1 `}>
           Score
         </span>
       </div>
@@ -54,7 +53,7 @@ const Chip = ({ label, color }) => (
 const Card = ({ children, className = "", isDark = true }) => (
   <div
     className={`rounded-2xl border p-5 ${className} ${
-      isDark ? "border-slate-800 bg-slate-900/80" : "border-slate-200 bg-white"
+      "border-slate-200 bg-white"
     }`}
   >
     {children}
@@ -62,7 +61,7 @@ const Card = ({ children, className = "", isDark = true }) => (
 );
 
 const SectionTitle = ({ children, isDark = true }) => (
-  <p className={`text-xs font-bold tracking-[0.2em] uppercase mb-4 ${isDark ? "text-gray-500" : "text-gray-500"}`}>
+  <p className={`text-xs font-bold tracking-[0.2em] uppercase mb-4 `}>
     {children}
   </p>
 );
@@ -201,8 +200,6 @@ const UploadZone = ({ onText, dragging, setDragging }) => {
 
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 export default function ResumeAnalyzer() {
-  const [theme] = useTheme();
-  const isDark = theme === "dark";
   const [resumeText, setResumeText] = useState("");
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -242,13 +239,13 @@ export default function ResumeAnalyzer() {
     : null;
 
   return (
-    <div className={`min-h-screen ${isDark ? "bg-slate-950" : "bg-slate-50"} py-10 px-4 pb-20`}>
+    <div className={`min-h-screen  py-10 px-4 pb-20`}>
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
         <div className="text-center mb-10">
           {/* Badge */}
-          <div className={`inline-flex items-center gap-3 rounded-full px-4 py-2 mb-6 ${isDark ? "bg-indigo-500/10 border border-indigo-500/30" : "bg-indigo-50 border border-indigo-200"}`}>
+          <div className={`inline-flex items-center gap-3 rounded-full px-4 py-2 mb-6 `}>
             <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
             <span className="text-xs font-bold tracking-widest uppercase text-indigo-400">
               ATS Resume Analyzer
@@ -258,18 +255,18 @@ export default function ResumeAnalyzer() {
           {/* Back Link */}
           <Link
             to="/app"
-            className={`inline-flex items-center gap-2 text-sm font-medium mb-6 transition-colors ${isDark ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-slate-700"}`}
+            className={`inline-flex items-center gap-2 text-sm font-medium mb-6 transition-colors `}
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
 
           {/* Title */}
-          <h1 className={`text-4xl md:text-5xl font-extrabold mb-4 ${isDark ? "text-white" : "text-slate-900"}`}>
+          <h1 className={`text-4xl md:text-5xl font-extrabold mb-4 `}>
             Get your resume
             <span className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent"> scored instantly</span>
           </h1>
-          <p className={`text-base max-w-md mx-auto ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+          <p className={`text-base max-w-md mx-auto `}>
             Paste or upload your resume and receive an ATS score with actionable improvement tips.
           </p>
         </div>
@@ -281,9 +278,9 @@ export default function ResumeAnalyzer() {
 
             {/* Divider */}
             <div className="flex items-center gap-4">
-              <div className={`flex-1 h-px ${isDark ? "bg-slate-800" : "bg-slate-200"}`} />
-              <span className={`text-xs font-bold tracking-widest ${isDark ? "text-slate-600" : "text-slate-400"}`}>OR PASTE TEXT</span>
-              <div className={`flex-1 h-px ${isDark ? "bg-slate-800" : "bg-slate-200"}`} />
+              <div className={`flex-1 h-px `} />
+              <span className={`text-xs font-bold tracking-widest `}>OR PASTE TEXT</span>
+              <div className={`flex-1 h-px `} />
             </div>
 
             {/* Textarea */}
@@ -295,9 +292,7 @@ export default function ResumeAnalyzer() {
               className={`
                 w-full rounded-xl p-4 text-sm leading-relaxed resize-y
                 transition-all duration-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-                ${isDark
-                  ? "bg-slate-900 border border-slate-700 text-gray-200 placeholder-slate-500"
-                  : "bg-white border border-slate-300 text-slate-700 placeholder-slate-400"
+                ${"bg-white border border-slate-300 text-slate-700 placeholder-slate-400"
                 }
               `}
             />
@@ -343,23 +338,23 @@ export default function ResumeAnalyzer() {
           <div className="flex flex-col gap-5">
 
             {/* Score + Summary Card */}
-            <Card isDark={isDark} className="flex flex-col sm:flex-row items-center gap-6">
-              <ScoreRing score={analysis.score} isDark={isDark} />
+            <Card className="flex flex-col sm:flex-row items-center gap-6">
+              <ScoreRing score={analysis.score} />
               <div className="flex-1 text-center sm:text-left">
                 <div className="flex items-center justify-center sm:justify-start gap-3 mb-3">
-                  <h2 className={`text-2xl font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                  <h2 className={`text-2xl font-bold `}>
                     Your Resume Score
                   </h2>
                   {scoreLabel && <Chip label={scoreLabel.text} color={scoreLabel.color} />}
                 </div>
-                <p className={`text-sm leading-relaxed ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                <p className={`text-sm leading-relaxed `}>
                   {analysis.summary}
                 </p>
               </div>
             </Card>
 
             {/* Strengths / Weaknesses Card */}
-            <Card isDark={isDark}>
+            <Card>
               {/* Tab Buttons */}
               <div className="flex gap-2 mb-6">
                 {["strengths", "weaknesses"].map((t) => (
@@ -370,7 +365,7 @@ export default function ResumeAnalyzer() {
                       px-4 py-2 rounded-lg text-sm font-semibold capitalize transition-all duration-200
                       ${tab === t
                         ? "bg-indigo-600 text-white"
-                        : `${isDark ? "text-slate-400 hover:bg-slate-800" : "text-slate-500 hover:bg-slate-100"}`
+                        : ``
                       }
                     `}
                   >
@@ -393,7 +388,7 @@ export default function ResumeAnalyzer() {
                     >
                       {tab === "strengths" ? "✓" : "!"}
                     </div>
-                    <span className={`text-sm leading-relaxed ${isDark ? "text-gray-300" : "text-slate-700"}`}>
+                    <span className={`text-sm leading-relaxed `}>
                       {item}
                     </span>
                   </li>
@@ -402,21 +397,21 @@ export default function ResumeAnalyzer() {
             </Card>
 
             {/* Improvement Roadmap Card */}
-            <Card isDark={isDark}>
-              <SectionTitle isDark={isDark}>Improvement Roadmap</SectionTitle>
+            <Card>
+              <SectionTitle>Improvement Roadmap</SectionTitle>
               <div className="flex flex-col">
                 {analysis.improvement_steps.map((step, i) => (
-                  <div key={i} className={`flex gap-4 py-4 ${i !== analysis.improvement_steps.length - 1 ? `border-b ${isDark ? "border-slate-800" : "border-slate-200"}` : ""}`}>
+                  <div key={i} className={`flex gap-4 py-4 ${i !== analysis.improvement_steps.length - 1 ? `border-b ` : ""}`}>
                     <div
                       className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30"
                     >
                       {String(i + 1).padStart(2, "0")}
                     </div>
                     <div>
-                      <p className={`font-bold text-sm mb-1 ${isDark ? "text-gray-200" : "text-slate-800"}`}>
+                      <p className={`font-bold text-sm mb-1 `}>
                         {step.section}
                       </p>
-                      <p className={`text-sm leading-relaxed ${isDark ? "text-slate-400" : "text-slate-600"}`}>
+                      <p className={`text-sm leading-relaxed `}>
                         {step.advice}
                       </p>
                     </div>
@@ -431,9 +426,7 @@ export default function ResumeAnalyzer() {
               className={`
                 w-full py-4 rounded-xl font-bold text-base
                 border transition-all duration-200
-                ${isDark
-                  ? "border-slate-700 text-slate-400 hover:border-indigo-500 hover:text-indigo-400 bg-transparent"
-                  : "border-slate-300 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 bg-white"
+                ${"border-slate-300 text-slate-500 hover:border-indigo-500 hover:text-indigo-600 bg-white"
                 }
               `}
             >
@@ -445,3 +438,7 @@ export default function ResumeAnalyzer() {
     </div>
   );
 }
+
+
+
+

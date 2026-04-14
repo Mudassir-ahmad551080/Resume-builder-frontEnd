@@ -1,16 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useTheme } from '../../context/ThemContext'
 import { ArrowRight, Github, Sparkles } from 'lucide-react'
 
 const CallToaction = () => {
-  const [theme] = useTheme()
 
   return (
     <section id="cta" className={`py-20 md:py-32 relative overflow-hidden ${
-      theme === 'ligth'
-        ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'
-        : 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'
+      'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'
     }`}>
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -21,9 +17,7 @@ const CallToaction = () => {
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`relative rounded-3xl overflow-hidden ${
-          theme === 'ligth'
-            ? 'bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600'
-            : 'bg-gradient-to-br from-green-700 via-emerald-700 to-teal-700'
+          'bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600'
         }`}>
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
@@ -116,3 +110,6 @@ const CallToaction = () => {
 }
 
 export default CallToaction
+
+
+

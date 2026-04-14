@@ -1,17 +1,13 @@
 import React from 'react'
 import { Sparkles } from 'lucide-react'
-import { useTheme } from '../../context/ThemContext'
 
 const Banner = () => {
-  const [theme] = useTheme()
 
   return (
     <div className="relative overflow-hidden">
       {/* Gradient Background */}
       <div className={`w-full py-3 text-center relative ${
-        theme === 'ligth'
-          ? 'bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500'
-          : 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600'
+        'bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500'
       }`}>
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -59,3 +55,6 @@ const Banner = () => {
 }
 
 export default Banner
+
+
+

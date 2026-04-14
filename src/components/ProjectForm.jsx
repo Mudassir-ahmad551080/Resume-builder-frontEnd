@@ -1,10 +1,9 @@
-import { Plus, Trash2, Folder, Link as LinkIcon, Code } from 'lucide-react';
+﻿import { Plus, Trash2, Folder, Link as LinkIcon, Code } from 'lucide-react';
 import React from 'react'
-import { useTheme } from '../context/ThemContext';
+
 
 const ProjectForm = ({ data, onChange }) => {
-  const [theme] = useTheme();
-  const isLight = theme === 'ligth';
+
 
   const addProject = () => {
     const newProject = {
@@ -34,12 +33,12 @@ const ProjectForm = ({ data, onChange }) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h3 className={`text-xl font-bold flex items-center gap-2 ${
-            isLight ? 'text-slate-800' : 'text-white'
+            'text-slate-800'
           }`}>
-            <Folder className={`w-5 h-5 ${isLight ? 'text-green-600' : 'text-green-400'}`} />
+            <Folder className={`w-5 h-5 text-green-600}`} />
             Projects
           </h3>
-          <p className={`text-sm mt-1 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+          <p className={`text-sm mt-1 text-slate-500}`}>
             Showcase your best work and portfolio projects.
           </p>
         </div>
@@ -56,23 +55,21 @@ const ProjectForm = ({ data, onChange }) => {
       {/* Empty State */}
       {data.length === 0 ? (
         <div className={`flex flex-col items-center justify-center py-12 px-4 rounded-2xl border-2 border-dashed transition-colors ${
-          isLight
-            ? 'border-slate-200 bg-slate-50/50 hover:bg-slate-50'
-            : 'border-slate-700 bg-slate-800/50 hover:bg-slate-800'
+          'border-slate-200 bg-slate-50/50 hover:bg-slate-50'
         }`}>
           <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
-            isLight ? 'bg-slate-200' : 'bg-slate-700'
+            'bg-slate-200'
           }`}>
-            <Folder className={`w-8 h-8 ${isLight ? 'text-slate-400' : 'text-slate-500'}`} />
+            <Folder className={`w-8 h-8 text-slate-400}`} />
           </div>
-          <h4 className={`text-lg font-medium ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>No projects added yet</h4>
-          <p className={`text-sm text-center max-w-sm ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+          <h4 className={`text-lg font-medium text-slate-700}`}>No projects added yet</h4>
+          <p className={`text-sm text-center max-w-sm text-slate-500}`}>
             Add your best projects to impress potential employers.
           </p>
           <button
             onClick={addProject}
             className={`mt-4 font-medium flex items-center gap-1 ${
-              isLight ? 'text-green-600 hover:text-green-700' : 'text-green-400 hover:text-green-500'
+              'text-green-600 hover:text-green-700'
             }`}
           >
             Click here to add your first project
@@ -84,9 +81,7 @@ const ProjectForm = ({ data, onChange }) => {
             <div
               key={index}
               className={`rounded-2xl shadow-lg transition-all duration-300 p-6 ${
-                isLight
-                  ? 'bg-white border border-slate-200 hover:shadow-xl'
-                  : 'bg-slate-800/80 border border-slate-700 hover:shadow-xl hover:shadow-slate-900/50'
+                'bg-white border border-slate-200 hover:shadow-xl'
               }`}
             >
               {/* Card Header */}
@@ -95,16 +90,14 @@ const ProjectForm = ({ data, onChange }) => {
                   <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold text-sm">
                     {index + 1}
                   </span>
-                  <h4 className={`font-semibold ${isLight ? 'text-slate-800' : 'text-white'}`}>
+                  <h4 className={`font-semibold text-slate-800}`}>
                     {project.name || "Untitled Project"}
                   </h4>
                 </div>
                 <button
                   onClick={() => removeProject(index)}
                   className={`p-2 rounded-full transition-colors ${
-                    isLight
-                      ? 'text-slate-400 hover:text-red-500 hover:bg-red-50'
-                      : 'text-slate-500 hover:text-red-400 hover:bg-red-500/10'
+                    'text-slate-400 hover:text-red-500 hover:bg-red-50'
                   }`}
                 >
                   <Trash2 size={18} />
@@ -116,7 +109,7 @@ const ProjectForm = ({ data, onChange }) => {
                 {/* Project Name */}
                 <div className="space-y-2">
                   <label className={`text-xs font-semibold uppercase tracking-wide ${
-                    isLight ? 'text-slate-500' : 'text-slate-400'
+                    'text-slate-500'
                   }`}>
                     Project Name
                   </label>
@@ -124,9 +117,7 @@ const ProjectForm = ({ data, onChange }) => {
                     type="text"
                     placeholder="e.g. E-commerce Platform"
                     className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
-                      isLight
-                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                      'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
                     }`}
                     value={project.name || ""}
                     onChange={(e) => updateProject(index, "name", e.target.value)}
@@ -136,7 +127,7 @@ const ProjectForm = ({ data, onChange }) => {
                 {/* Project Type */}
                 <div className="space-y-2">
                   <label className={`text-xs font-semibold uppercase tracking-wide ${
-                    isLight ? 'text-slate-500' : 'text-slate-400'
+                    'text-slate-500'
                   }`}>
                     Project Type
                   </label>
@@ -144,9 +135,7 @@ const ProjectForm = ({ data, onChange }) => {
                     type="text"
                     placeholder="e.g. Web App, Mobile App"
                     className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
-                      isLight
-                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                      'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
                     }`}
                     value={project.type || ""}
                     onChange={(e) => updateProject(index, "type", e.target.value)}
@@ -158,7 +147,7 @@ const ProjectForm = ({ data, onChange }) => {
                   {/* Live Link */}
                   <div className="space-y-2">
                     <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
-                      isLight ? 'text-slate-500' : 'text-slate-400'
+                      'text-slate-500'
                     }`}>
                       <LinkIcon size={12} /> Live Link
                     </label>
@@ -166,9 +155,7 @@ const ProjectForm = ({ data, onChange }) => {
                       type="text"
                       placeholder="https://example.com"
                       className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
-                        isLight
-                          ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-                          : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                        'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
                       }`}
                       value={project.link || ""}
                       onChange={(e) => updateProject(index, "link", e.target.value)}
@@ -178,7 +165,7 @@ const ProjectForm = ({ data, onChange }) => {
                   {/* Code Link */}
                   <div className="space-y-2">
                     <label className={`text-xs font-semibold uppercase tracking-wide flex items-center gap-1 ${
-                      isLight ? 'text-slate-500' : 'text-slate-400'
+                      'text-slate-500'
                     }`}>
                       <Code size={12} /> Code Link
                     </label>
@@ -186,9 +173,7 @@ const ProjectForm = ({ data, onChange }) => {
                       type="text"
                       placeholder="https://github.com/..."
                       className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 ${
-                        isLight
-                          ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-                          : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                        'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
                       }`}
                       value={project.code_link || ""}
                       onChange={(e) => updateProject(index, "code_link", e.target.value)}
@@ -199,7 +184,7 @@ const ProjectForm = ({ data, onChange }) => {
                 {/* Description */}
                 <div className="space-y-2">
                   <label className={`text-xs font-semibold uppercase tracking-wide ${
-                    isLight ? 'text-slate-500' : 'text-slate-400'
+                    'text-slate-500'
                   }`}>
                     Description
                   </label>
@@ -207,9 +192,7 @@ const ProjectForm = ({ data, onChange }) => {
                     rows={4}
                     placeholder="Describe what the project does, your role, and key achievements..."
                     className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-300 resize-y min-h-[100px] ${
-                      isLight
-                        ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-                        : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+                      'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
                     }`}
                     value={project.description || ""}
                     onChange={(e) => updateProject(index, "description", e.target.value)}
@@ -225,3 +208,5 @@ const ProjectForm = ({ data, onChange }) => {
 }
 
 export default ProjectForm
+
+

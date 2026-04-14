@@ -1,17 +1,12 @@
 
-import { useState, createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 
 const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
-  // Retrieve the theme from localStorage or set to 'light' by default
-  const savedTheme = localStorage.getItem("theme") || "dark";
-  const [theme, setTheme] = useState(savedTheme);
-
-  // Whenever the theme changes, save it to localStorage
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  // Light mode only - no theme switching
+  const theme = "ligth";
+  const setTheme = () => {}; // No-op function for compatibility
 
   return (
     <ThemeContext.Provider value={[theme, setTheme]}>

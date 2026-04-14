@@ -1,13 +1,10 @@
-import { Loader2, Sparkles, FileText } from 'lucide-react';
+﻿import { Loader2, Sparkles, FileText } from 'lucide-react';
 import React from 'react';
-import { useTheme } from '../context/ThemContext';
 import { useSelector } from 'react-redux';
 import api from '../config/api';
 import toast from 'react-hot-toast';
 
 const ProfessionalSummary = ({ data, onChange, setResumeData }) => {
-  const [theme] = useTheme();
-  const isLight = theme === 'ligth';
   const { token } = useSelector((state) => state.auth);
   const [isGenerating, setIsGenerating] = React.useState(false);
 
@@ -41,20 +38,18 @@ const ProfessionalSummary = ({ data, onChange, setResumeData }) => {
 
   return (
     <div className={`rounded-2xl p-6 shadow-lg transition-all duration-300 ${
-      isLight
-        ? 'bg-white border border-slate-200'
-        : 'bg-slate-800/80 border border-slate-700'
+      'bg-white border border-slate-200'
     }`}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
           <h3 className={`text-xl font-bold flex items-center gap-2 ${
-            isLight ? 'text-slate-800' : 'text-white'
+            'text-slate-800'
           }`}>
-            <FileText className={`w-5 h-5 ${isLight ? 'text-green-600' : 'text-green-400'}`} />
+            <FileText className={`w-5 h-5 text-green-600}`} />
             Professional Summary
           </h3>
-          <p className={`text-sm mt-1 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+          <p className={`text-sm mt-1 text-slate-500}`}>
             Add a concise summary highlighting your key experience and skills.
           </p>
         </div>
@@ -83,14 +78,12 @@ const ProfessionalSummary = ({ data, onChange, setResumeData }) => {
           value={data || ''}
           onChange={(e) => onChange(e.target.value)}
           className={`w-full p-4 rounded-xl text-sm outline-none transition-all duration-300 resize-none ${
-            isLight
-              ? 'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
-              : 'bg-slate-900 border border-slate-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-white placeholder-slate-500'
+            'bg-slate-50 border border-slate-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 text-slate-800 placeholder-slate-400'
           }`}
           placeholder="Write a compelling summary about your professional background, highlighting your years of experience, key strengths, and career achievements..."
         />
         <p className={`mt-3 text-xs flex items-center gap-1 ${
-          isLight ? 'text-slate-500' : 'text-slate-400'
+          'text-slate-500'
         }`}>
           <Sparkles className="w-3 h-3 text-yellow-500" />
           Tip: Keep it concise (3-4 sentences) and focus on your most relevant achievements and skills.
@@ -101,3 +94,5 @@ const ProfessionalSummary = ({ data, onChange, setResumeData }) => {
 };
 
 export default ProfessionalSummary;
+
+
