@@ -1,7 +1,7 @@
 import React from "react";
 import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 
-const SimpleTemplate = ({ data, accentColor }) => {
+const ProfessionalTemplate = ({ data, accentColor }) => {
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const [year, month] = dateStr.split("-");
@@ -24,17 +24,17 @@ const SimpleTemplate = ({ data, accentColor }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white text-gray-800 p-10 min-h-screen font-sans">
-      {/* Header Section - Simple and Clean */}
+    <div className="max-w-4xl mx-auto bg-white text-gray-800 p-10 min-h-screen font-sans shadow-sm border border-gray-100">
+      {/* Header Section - Simple & Elegant */}
       <header className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2 uppercase tracking-tight">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">
           {data.personal_info?.full_name || "Your Name"}
         </h1>
         <p className="text-lg font-medium mb-6" style={{ color: accentColor }}>
           {data?.personal_info?.profession || "Profession"}
         </p>
 
-        {/* Contact Info Bar - Minimalist */}
+        {/* Contact Info Bar */}
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
           {data.personal_info?.phone && (
             <div className="flex items-center gap-1.5">
@@ -57,16 +57,8 @@ const SimpleTemplate = ({ data, accentColor }) => {
           {data.personal_info?.linkedin && (
             <div className="flex items-center gap-1.5">
               <Linkedin size={14} className="text-gray-400" />
-              <a href={data.personal_info.linkedin} target="_blank" className="hover:text-gray-800 underline decoration-gray-300 underline-offset-2">
+              <a href={data.personal_info.linkedin} target="_blank" rel="noreferrer" className="hover:text-gray-800 underline decoration-gray-300 underline-offset-2">
                 LinkedIn
-              </a>
-            </div>
-          )}
-          {data.personal_info?.website && (
-            <div className="flex items-center gap-1.5">
-              <Globe size={14} className="text-gray-400" />
-              <a href={data.personal_info.website} target="_blank" className="hover:text-gray-800 underline decoration-gray-300 underline-offset-2">
-                Portfolio
               </a>
             </div>
           )}
@@ -157,7 +149,7 @@ const SimpleTemplate = ({ data, accentColor }) => {
                   <div className="flex justify-between items-baseline mb-1">
                     <h3 className="font-bold text-gray-800 text-sm">{project.name}</h3>
                     {project.link && (
-                      <a href={project.link} target="_blank" className="text-xs text-gray-400 hover:text-gray-800 transition-colors underline">Visit Project</a>
+                      <a href={project.link} target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-gray-800 transition-colors underline">Visit Project</a>
                     )}
                   </div>
                   <p className="text-xs italic mb-2 text-gray-500">{project.type}</p>
@@ -172,4 +164,4 @@ const SimpleTemplate = ({ data, accentColor }) => {
   );
 };
 
-export default SimpleTemplate;
+export default ProfessionalTemplate;

@@ -50,6 +50,12 @@ const TemplateSelector = ({ SelectedTemplate, onChange }) => {
       name: "Executive Pro",
       previewImage:
         "A premium two-column corporate layout with sidebar for maximum impact.",
+    },
+    {
+      id: "professional",
+      name: "Professional",
+      previewImage:
+        "A high-end, modern two-column layout designed for maximum professionalism and clarity.",
     }
   ];
 

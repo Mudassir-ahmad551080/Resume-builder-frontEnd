@@ -6,6 +6,7 @@ import MinimalTemplate from './templates/MinimalTemplate.jsx';
 import ModernCardTemplate from './templates/ModernCardTemplate.jsx';
 import SimpleTemplate from './templates/SimpleTemplate.jsx';
 import ExecutiveProTemplate from './templates/ExecutiveProTemplate.jsx';
+import ProfessionalTemplate from './templates/ProfessionalTemplate.jsx';
 
 const ResumePreview = ({ data, template, accentColor, classes = '', isLoading = false }) => {
 
@@ -21,6 +22,8 @@ const ResumePreview = ({ data, template, accentColor, classes = '', isLoading = 
         return <ModernCardTemplate data={data} accentColor={accentColor} />;
       case 'executive-pro':
         return <ExecutiveProTemplate data={data} accentColor={accentColor} />;
+      case 'professional':
+        return <ProfessionalTemplate data={data} accentColor={accentColor} />;
       case 'simple':
         return <SimpleTemplate data={data} accentColor={accentColor} />;
       default:
@@ -97,7 +100,7 @@ const ResumePreview = ({ data, template, accentColor, classes = '', isLoading = 
         </div>
       </div>
 
-      <style jsx>
+      <style>
         {`
           @page {
             size: letter;
