@@ -31,17 +31,22 @@ const Dashboard = () => {
   const [editresumeId, setEditresumeId] = React.useState("");
   const navigate = useNavigate();
   const loadAllResumes = async () => {
+    if (!token) return;
     setFetchingResumes(true);
     try {
       const { data } = await api.get('/api/users/resumes', {
         headers: {
-          Authorization: token
+          Authorization: token.startsWith('Bearer ') ? token : `Bearer ${token}`
         }
       });
-      setAllResumes(data.resumes);
+      setAllResumes(data.resumes || []);
     } catch (error) {
-      console.error("Load Error:", error);
-      toast.error("Failed to load resumes");
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+      } else {
+        console.error("Load Error:", error);
+        toast.error("Failed to load resumes");
+      }
     }
     finally {
       setFetchingResumes(false);
@@ -182,7 +187,7 @@ const Dashboard = () => {
   };
   useEffect(() => {
     loadAllResumes();
-  },[]);
+  }, [token]);
 
   return (
     <div className="min-h-screen flex flex-col px-6 sm:px-10 py-8 bg-gradient-to-br from-slate-50 via-white to-blue-50">

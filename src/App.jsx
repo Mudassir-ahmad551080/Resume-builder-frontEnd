@@ -46,6 +46,9 @@ const App = () => {
       }
     } catch (error) {
       console.log('Error fetching user data:', error)
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token')
+      }
     } finally {
       dispatch(setLoading(false))
     }

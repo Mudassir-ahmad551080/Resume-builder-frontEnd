@@ -41,7 +41,7 @@ const ResumeBuilder = () => {
     _id: "",
     title: "",
     professional_summary: "",
-    personal_info: {}, // G£à fixed spelling
+    personal_info: {}, // Gï¿½ï¿½ fixed spelling
     experience: [],
     education: [],
     projects: [],
@@ -53,11 +53,12 @@ const ResumeBuilder = () => {
 
   const { token } = useSelector((state) => state.auth);
   const loadExistingResume = async () => {
+    if (!token) return;
     setLoading(true);
     try {
       const response = await api.get(`/api/resumes/get/${resumeId}`, {
         headers: {
-          Authorization: token
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -79,6 +80,9 @@ const ResumeBuilder = () => {
       }
     } catch (error) {
       console.error("Error loading resume:", error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+      }
       toast.error("Failed to fetch resume data");
     } finally {
       setLoading(false);

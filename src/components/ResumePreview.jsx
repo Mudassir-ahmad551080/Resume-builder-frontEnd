@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import ClassicTemplate from './templates/ClassicTemplate.jsx';
 import ModernTemplate from './templates/ModernTemplate.jsx';
 import MinimallmageTemplate from './templates/MinimalImageTemplate.jsx';
@@ -32,45 +32,52 @@ const ResumePreview = ({ data, template, accentColor, classes = '', isLoading = 
   };
 
   const ResumeSkeleton = () => (
-    <div className={`w-full min-h-[800px] p-8 animate-pulse ${
-      'bg-white'
-    }`}>
-      <div className={`flex items-center gap-4 mb-8 border-b pb-6 border-slate-200}`}>
-        <div className={`w-20 h-20 rounded-full bg-slate-200}`}></div>
+    <div className="w-full min-h-[800px] p-8 animate-pulse bg-white">
+      <div className="flex items-center gap-4 mb-8 border-b pb-6 border-slate-200">
+        <div className="w-20 h-20 rounded-full bg-slate-200"></div>
         <div className="space-y-3 flex-1">
-          <div className={`h-6 rounded w-1/3 bg-slate-200}`}></div>
-          <div className={`h-4 rounded w-1/4 bg-slate-200}`}></div>
+          <div className="h-6 rounded w-1/3 bg-slate-200"></div>
+          <div className="h-4 rounded w-1/4 bg-slate-200"></div>
           <div className="flex gap-4 mt-2">
-            <div className={`h-3 rounded w-20 bg-slate-200}`}></div>
-            <div className={`h-3 rounded w-20 bg-slate-200}`}></div>
+            <div className="h-3 rounded w-20 bg-slate-200"></div>
+            <div className="h-3 rounded w-20 bg-slate-200"></div>
           </div>
         </div>
       </div>
       <div className="mb-8 space-y-2">
-        <div className={`h-4 rounded w-full bg-slate-200}`}></div>
-        <div className={`h-4 rounded w-full bg-slate-200}`}></div>
-        <div className={`h-4 rounded w-3/4 bg-slate-200}`}></div>
+        <div className="h-4 rounded w-full bg-slate-200"></div>
+        <div className="h-4 rounded w-full bg-slate-200"></div>
+        <div className="h-4 rounded w-3/4 bg-slate-200"></div>
       </div>
       <div className="mb-8">
-        <div className={`h-5 rounded w-1/4 mb-4 bg-slate-300}`}></div>
+        <div className="h-5 rounded w-1/4 mb-4 bg-slate-300"></div>
         <div className="space-y-6">
           {[1, 2].map((i) => (
             <div key={i} className="space-y-2">
               <div className="flex justify-between">
-                <div className={`h-4 rounded w-1/3 bg-slate-200}`}></div>
-                <div className={`h-4 rounded w-1/6 bg-slate-200}`}></div>
+                <div className="h-4 rounded w-1/3 bg-slate-200"></div>
+                <div className="h-4 rounded w-1/6 bg-slate-200"></div>
               </div>
-              <div className={`h-3 rounded w-full bg-slate-100}`}></div>
-              <div className={`h-3 rounded w-5/6 bg-slate-100}`}></div>
+              <div className="h-3 rounded w-full bg-slate-100"></div>
+              <div className="h-3 rounded w-5/6 bg-slate-100"></div>
             </div>
           ))}
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <div className={`h-5 rounded w-1/3 mb-4 bg-slate-300}`}></div>
+        <div className="space-y-4">
+          <div className="h-5 rounded w-1/3 mb-4 bg-slate-300"></div>
           <div className="flex flex-wrap gap-2">
-            {[1,2,3,4].map(i => <div key={i} className={`h-8 w-20 rounded bg-slate-100}`}></div>)}
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-8 w-20 rounded bg-slate-100"></div>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div className="h-5 rounded w-1/3 mb-4 bg-slate-300"></div>
+          <div className="space-y-2">
+            <div className="h-3 rounded w-full bg-slate-100"></div>
+            <div className="h-3 rounded w-full bg-slate-100"></div>
           </div>
         </div>
       </div>
@@ -119,5 +126,3 @@ const ResumePreview = ({ data, template, accentColor, classes = '', isLoading = 
 };
 
 export default ResumePreview;
-
-

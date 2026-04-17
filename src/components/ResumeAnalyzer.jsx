@@ -244,15 +244,27 @@ export default function ResumeAnalyzer() {
   const [resumeText, setResumeText] = useState("");
   const [dragging, setDragging] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState("strengths");
+
+  const loadingSteps = [
+    { text: "📄 Parsing your resume...", icon: "📄" },
+    { text: "🔍 Analyzing content...", icon: "🔍" },
+    { text: "🧠 Generating insights...", icon: "🧠" },
+  ];
 
   const analyze = async () => {
     if (!resumeText.trim()) return;
     setLoading(true);
     setError(null);
     setAnalysis(null);
+    setLoadingStep(0);
+
+    const stepInterval = setInterval(() => {
+      setLoadingStep((prev) => (prev < loadingSteps.length - 1 ? prev + 1 : prev));
+    }, 3500);
 
     try {
       const res = await fetch(API_URL, {
@@ -267,6 +279,7 @@ export default function ResumeAnalyzer() {
     } catch (err) {
       setError(err.message);
     } finally {
+      clearInterval(stepInterval);
       setLoading(false);
     }
   };
@@ -276,7 +289,7 @@ export default function ResumeAnalyzer() {
   const scoreLabel = analysis
     ? analysis.score >= 75 ? { text: "Excellent", color: "#10b981" }
       : analysis.score >= 50 ? { text: "Good", color: "#f59e0b" }
-        : { text: "Needs Improvement", color: "#ef4444" }
+      : { text: "Needs Improvement", color: "#ef4444" }
     : null;
 
   return (
@@ -314,7 +327,7 @@ export default function ResumeAnalyzer() {
           </p>
         </div>
 
-        {!analysis ? (
+        {!analysis && !loading ? (
           /* ── INPUT PANEL ── */
           <div className="flex flex-col gap-6">
             <UploadZone onText={setResumeText} dragging={dragging} setDragging={setDragging} />
@@ -378,7 +391,31 @@ export default function ResumeAnalyzer() {
               )}
             </button>
           </div>
-
+        ) : loading ? (
+          /* ── ANIMATED LOADING STATE ── */
+          <div className="flex flex-col items-center justify-center py-20 gap-8">
+            <div className="relative">
+              <div className="w-24 h-24 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-indigo-600 animate-pulse" />
+              </div>
+            </div>
+            <div className="text-center space-y-3">
+              <div className="flex items-center justify-center gap-3 text-xl font-bold text-gray-800 transition-all duration-500">
+                <span>{loadingSteps[loadingStep].icon}</span>
+                <span>{loadingSteps[loadingStep].text}</span>
+              </div>
+              <p className="text-gray-400 text-sm font-medium">Our AI is carefully reviewing your profile...</p>
+            </div>
+            <div className="flex gap-2">
+              {loadingSteps.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 w-8 rounded-full transition-all duration-500 ${i <= loadingStep ? 'bg-indigo-600 w-12' : 'bg-gray-200'}`}
+                />
+              ))}
+            </div>
+          </div>
         ) : (
           /* ── RESULTS PANEL ── */
           <div className="flex flex-col gap-6">
@@ -399,11 +436,10 @@ export default function ResumeAnalyzer() {
               </div>
             </Card>
 
-            {/* Strengths / Weaknesses Card */}
+            {/* Detailed Insights Card */}
             <Card>
-              {/* Tab Buttons */}
               <div className="flex gap-2 mb-6 p-1 bg-gray-100 rounded-xl">
-                {["strengths", "weaknesses"].map((t) => (
+                {["strengths", "weaknesses", "pro_tips"].map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
@@ -419,18 +455,21 @@ export default function ResumeAnalyzer() {
                       <span className="flex items-center justify-center gap-2">
                         <CheckCircle className="w-4 h-4" /> Strengths
                       </span>
+                    ) : t === "weaknesses" ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Target className="w-4 h-4" /> Weaknesses
+                      </span>
                     ) : (
                       <span className="flex items-center justify-center gap-2">
-                        <Target className="w-4 h-4" /> Areas to Improve
+                        <Sparkles className="w-4 h-4" /> Pro Tips
                       </span>
                     )}
                   </button>
                 ))}
               </div>
 
-              {/* List */}
               <ul className="flex flex-col gap-3">
-                {(tab === "strengths" ? (analysis.strengths || []) : (analysis.weaknesses || [])).map((item, i) => (
+                {(tab === "strengths" ? (analysis.strengths || []) : tab === "weaknesses" ? (analysis.weaknesses || []) : (analysis.pro_tips || [])).map((item, i) => (
                   <li key={i} className="flex gap-3 items-start p-3 rounded-xl hover:bg-gray-50 transition-colors">
                     <div
                       className={`
@@ -438,11 +477,13 @@ export default function ResumeAnalyzer() {
                         text-xs font-bold border
                         ${tab === "strengths"
                           ? "bg-emerald-50 text-emerald-600 border-emerald-200"
-                          : "bg-red-50 text-red-600 border-red-200"
+                          : tab === "weaknesses"
+                          ? "bg-red-50 text-red-600 border-red-200"
+                          : "bg-blue-50 text-blue-600 border-blue-200"
                         }
                       `}
                     >
-                      {tab === "strengths" ? "✓" : "!"}
+                      {tab === "strengths" ? "✓" : tab === "weaknesses" ? "!" : "💡"}
                     </div>
                     <span className="text-gray-700 text-sm leading-relaxed">
                       {item}
@@ -450,34 +491,6 @@ export default function ResumeAnalyzer() {
                   </li>
                 ))}
               </ul>
-            </Card>
-
-            {/* Improvement Roadmap Card */}
-            <Card>
-              <SectionTitle icon={TrendingUp}>Improvement Roadmap</SectionTitle>
-              <div className="flex flex-col">
-                {(analysis.improvement_steps || []).map((step, i) => (
-                  <div
-                    key={i}
-                    className={`
-                      flex gap-4 py-4
-                      ${i !== analysis.improvement_steps.length - 1 ? "border-b border-gray-100" : ""}
-                    `}
-                  >
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-bold bg-indigo-100 text-indigo-600 border border-indigo-200">
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-bold text-gray-900 text-sm mb-1">
-                        {step.section}
-                      </p>
-                      <p className="text-gray-600 text-sm leading-relaxed">
-                        {step.advice}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </Card>
 
             {/* Analyze Again Button */}
