@@ -4,7 +4,7 @@ import logo from '../../public/logo.svg';
 import { logout } from "../app/features/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { FileText, LogOut, Sparkles } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,18 +25,7 @@ const Navbar = () => {
             <img src={logo} alt="Resume Builder" className="h-10 w-auto" />
           </Link>
 
-          {/* Center Section - Analyze Resume Button */}
-          <Link
-            to="/analyze-resume"
-            className="group relative inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium rounded-xl shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300 overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              <span className="hidden sm:inline">Analyze Resume</span>
-              <span className="sm:hidden">Analyze</span>
-            </span>
-            <Sparkles className="w-3 h-3 relative z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </Link>
+          {/* Center section intentionally left empty (Analyze moved to dashboard) */}
 
           {/* Right Section - User Info & Logout */}
           <div className="flex items-center gap-3">

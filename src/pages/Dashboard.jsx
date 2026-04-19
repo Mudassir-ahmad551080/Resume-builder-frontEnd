@@ -11,6 +11,7 @@ import {
   UploadCloudIcon,
   XIcon,
   Mic
+  ,FileText, Sparkles
 } from "lucide-react";
 
 import { useSelector } from "react-redux";
@@ -30,28 +31,6 @@ const Dashboard = () => {
   const [resume, setResume] = React.useState(null);
   const [editresumeId, setEditresumeId] = React.useState("");
   const navigate = useNavigate();
-  const loadAllResumes = async () => {
-    if (!token) return;
-    setFetchingResumes(true);
-    try {
-      const { data } = await api.get('/api/users/resumes', {
-        headers: {
-          Authorization: token.startsWith('Bearer ') ? token : `Bearer ${token}`
-        }
-      });
-      setAllResumes(data.resumes || []);
-    } catch (error) {
-      if (error.response?.status === 401) {
-        localStorage.removeItem('token');
-      } else {
-        console.error("Load Error:", error);
-        toast.error("Failed to load resumes");
-      }
-    }
-    finally {
-      setFetchingResumes(false);
-    }
-  };
 
   const createResume = async (e) => {
     e.preventDefault();
@@ -133,7 +112,7 @@ const Dashboard = () => {
   const editTitle = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await api.put(
+      await api.put(
         `/api/resumes/update`, // Or `/api/resumes/update/${editresumeId}`
         {
           resumeId: editresumeId,
@@ -186,6 +165,29 @@ const Dashboard = () => {
     }
   };
   useEffect(() => {
+    const loadAllResumes = async () => {
+      if (!token) return;
+      setFetchingResumes(true);
+      try {
+        const { data } = await api.get("/api/users/resumes", {
+          headers: {
+            Authorization: token.startsWith("Bearer ")
+              ? token
+              : `Bearer ${token}`,
+          },
+        });
+        setAllResumes(data.resumes || []);
+      } catch (error) {
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token");
+        } else {
+          console.error("Load Error:", error);
+          toast.error("Failed to load resumes");
+        }
+      } finally {
+        setFetchingResumes(false);
+      }
+    };
     loadAllResumes();
   }, [token]);
 
@@ -257,6 +259,22 @@ const Dashboard = () => {
             </div>
           </div>
         </Link>
+        {/* Analyze Resume */}
+        <Link
+          to="/analyze-resume"
+          className="group relative flex-1 rounded-2xl p-8 shadow-md hover:shadow-xl border transition-all duration-300 overflow-hidden bg-white border-slate-200 hover:border-emerald-300"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="relative flex flex-col items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-200 group-hover:scale-110 transition-transform duration-300">
+              <FileText className="w-8 h-8 text-white" />
+            </div>
+            <div className="text-center">
+              <span className="text-lg font-semibold block mb-1 text-slate-800">Analyze Resume</span>
+              <span className="text-sm text-slate-500">AI analysis and suggestions</span>
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* Section Divider */}
@@ -290,9 +308,9 @@ const Dashboard = () => {
       const baseColor = colors[index % colors.length];
       return (
         <div
-          onClick={() => navigate(`/app/builder/${resume._id}`)}
           key={index}
-          className="group relative rounded-2xl p-6 shadow-md hover:shadow-2xl border hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden bg-white border-slate-200 hover:border-slate-300"
+          onClick={() => navigate(`/editor/${resume._id}/edit`)}
+          className="group relative rounded-2xl p-6 shadow-md hover:shadow-xl border transition-all duration-300 cursor-pointer overflow-hidden bg-white border-slate-200"
         >
           <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ backgroundColor: baseColor }} />
           <div className="absolute -right-12 -top-12 w-24 h-24 rounded-full opacity-10 group-hover:opacity-20 transition-opacity duration-300" style={{ backgroundColor: baseColor }} />
