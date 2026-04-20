@@ -309,7 +309,7 @@ const Dashboard = () => {
       return (
         <div
           key={index}
-          onClick={() => navigate(`/editor/${resume._id}/edit`)}
+          onClick={() => navigate(`/app/builder/${resume._id}`)}
           className="group relative rounded-2xl p-6 shadow-md hover:shadow-xl border transition-all duration-300 cursor-pointer overflow-hidden bg-white border-slate-200"
         >
           <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ backgroundColor: baseColor }} />
